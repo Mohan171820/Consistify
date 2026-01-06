@@ -1,12 +1,18 @@
 package com.example.Streaker.Entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Entity
 // Constrains to avoid log same skill twice
 @Table(name = "practice_sessions",uniqueConstraints = @UniqueConstraint(columnNames = {"skill_id,","practice_date"}))
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class PracticeSession {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
