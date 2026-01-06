@@ -9,7 +9,8 @@ import java.time.LocalDate;
 
 @Entity
 // Constrains to avoid log same skill twice
-@Table(name = "practice_sessions",uniqueConstraints = @UniqueConstraint(columnNames = {"skill_id,","practice_date"}))
+@Table(name = "practice_sessions",uniqueConstraints = @UniqueConstraint(columnNames = {"skill_id", "practice_date"})
+)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
