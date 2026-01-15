@@ -22,10 +22,12 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    // Here this filter checks the credentials entered by the user this is verification filter
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
+                // This is to disable the crf token generated in browser so everytime we login no need to use it
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
@@ -34,6 +36,7 @@ public class SecurityConfig {
                         ).authenticated()
                         .anyRequest().authenticated()
                 )
+                //This gives the basic login form to enter the login credentials
                 .formLogin(form -> form
                         .defaultSuccessUrl("/swagger-ui/index.html", true)
                 )
