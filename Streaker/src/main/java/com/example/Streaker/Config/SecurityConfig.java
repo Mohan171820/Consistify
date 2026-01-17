@@ -1,49 +1,54 @@
 package com.example.Streaker.Config;
 
+import com.example.Streaker.Service.CustomOAuth2UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-
-
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor // This automatically injects the CustomOAuth2UserService
 public class SecurityConfig {
+
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // Here this filter checks the credentials entered by the user this is verification filter
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         http
-                // This is to disable the crf token generated in browser so everytime we login no need to use it
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.disable()) // Disabled for simplified API interaction
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
-                                "/login/**",              // OAuth2 endpoints
+                                "/login/**",
                                 "/oauth2/**"
-                        ).authenticated()
-                        .anyRequest().authenticated()
+                        ).permitAll() // Publicly accessible endpoints
+                        .anyRequest().authenticated() // Everything else requires a login
                 )
-                //This gives the basic login form to enter the login credentials
                 .formLogin(form -> form
                         .defaultSuccessUrl("/swagger-ui/index.html", true)
                 )
                 .oauth2Login(oauth -> oauth
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(customOAuth2UserService) // Maps Google User to DB User
+                        )
                         .defaultSuccessUrl("/swagger-ui/index.html", true)
+                )
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/") // Redirect home after logout
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
                 )
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
@@ -51,7 +56,4 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-
 }
-

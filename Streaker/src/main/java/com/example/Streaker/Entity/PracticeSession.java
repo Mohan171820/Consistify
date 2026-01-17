@@ -30,6 +30,10 @@ public class PracticeSession {
 // Enum allows only existed values and avoids invalid data so it prevents the false info in practice_sessions
     @Enumerated(EnumType.STRING)
     private EffortLevel effortLevel;
+    // Add this to link to the User
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private String notes;
 
