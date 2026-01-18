@@ -71,7 +71,9 @@ public class PracticeLoggingService {
     public List<PracticeResponseDTO> getAllSessions() {
         // Identify who is asking for the data by getting their email
         String email = SecurityUtil.getCurrentUserEmail();
-
+        if (email == null) {
+            return List.of();   // return empty list, NOT exception
+        }
         // Find the user record in our database
         User currentUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));

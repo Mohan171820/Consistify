@@ -32,10 +32,16 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/login/**",
+                                "/graphiql/**",      // The UI page
+                                "/graphql/**",       // The Data API
+                                "/_graphiql/**",     // INTERNAL ASSETS (Fixes the 302 errors)
+                                "/vendor/**",
+                                "/favicon.ico",
                                 "/oauth2/**"
                         ).permitAll() // Publicly accessible endpoints
                         .anyRequest().authenticated() // Everything else requires a login
                 )
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/graphql/**"))
                 .formLogin(form -> form
                         .defaultSuccessUrl("/swagger-ui/index.html", true)
                 )
