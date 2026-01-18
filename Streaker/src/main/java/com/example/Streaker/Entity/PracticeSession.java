@@ -22,15 +22,19 @@ public class PracticeSession {
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "skill_id", nullable = false)
     private Skill skill;
+
     @Column(nullable = false)
     private LocalDate practiceDate;
     //This duration minutes is how we calculate effort level (TimeSpent = Effort Level)
+
     @Column(nullable = false)
     private int durationMinutes;
 // Enum allows only existed values and avoids invalid data so it prevents the false info in practice_sessions
+
     @Enumerated(EnumType.STRING)
     private EffortLevel effortLevel;
     // Add this to link to the User
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;

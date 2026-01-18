@@ -1,0 +1,44 @@
+type Query {
+
+    # Get all active skills of logged-in user
+    mySkills: [Skill!]!
+    # Get all practice sessions of logged-in user
+    myPracticeSessions: [PracticeSession!]!
+}
+type Mutation {
+    # Log a new practice session
+    logPractice(input: PracticeLogInput!): String!
+}
+
+
+# Root
+type Skill{
+    id:ID!
+    name:String
+    category:String
+    decayDays:Int
+    active:Boolean
+}
+ # Practice session entity details
+type PracticeSession{
+    id: ID!
+    skillId: ID!
+    skillName: String!
+    practiceDate: String!
+    durationMinutes: Int!
+    effortLevel: EffortLevel
+    notes: String
+}
+input PracticeLogInput {
+    skillId: ID!
+    practiceDate: String!
+    durationMinutes: Int!
+    effortLevel: EffortLevel
+    notes: String
+}
+# Enum for effortLevel
+enum EffortLevel {
+    Low,
+    Medium,
+    High
+}

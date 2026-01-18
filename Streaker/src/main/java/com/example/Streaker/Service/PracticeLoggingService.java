@@ -47,9 +47,8 @@ public class PracticeLoggingService {
 
         // Fetch the skill from the database and make sure it is actually active
         Skill skill = skillRepository
-                .findByIdAndActiveTrue(request.getSkillId())
-                .orElseThrow(() -> new IllegalArgumentException("Skill not found or inactive"));
-
+                .findByIdAndUserAndActiveTrue(request.getSkillId(), currentUser) // The new name
+                .orElseThrow(() -> new IllegalArgumentException("Skill not found or belongs to another user"));
         // Basic validation to ensure the practice time is at least 1 minute
         if (request.getDurationMinutes() <= 0) {
             throw new IllegalArgumentException("Duration must be greater than zero");
