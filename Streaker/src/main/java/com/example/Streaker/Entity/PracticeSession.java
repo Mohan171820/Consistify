@@ -8,37 +8,41 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 @Entity
-// Constrains to avoid log same skill twice
-@Table(name = "practice_sessions",uniqueConstraints = @UniqueConstraint(columnNames = {"skill_id", "practice_date"})
+// Prevents logging the same skill twice on the same date
+@Table(name = "practice_sessions", uniqueConstraints = @UniqueConstraint(columnNames = {"skill_id", "practice_date"})
 )
-@Data     // Implemented lombok instead of getters and setters
+@Data // Lombok generates getters, setters, toString, equals, and hashCode
 @AllArgsConstructor
 @NoArgsConstructor
 public class PracticeSession {
+
+    // Primary key for the practice session
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    //Here we mentioned skill -but we take skill id from skill entity using @joinColumn annotation and that id will be ued in Db
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+
+    // Links the practice session to a skill using skill_id column
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "skill_id", nullable = false)
     private Skill skill;
 
+    // Date on which the practice was done
     @Column(nullable = false)
     private LocalDate practiceDate;
-    //This duration minutes is how we calculate effort level (TimeSpent = Effort Level)
 
+    // Duration of practice in minutes (used to determine effort level)
     @Column(nullable = false)
     private int durationMinutes;
-// Enum allows only existed values and avoids invalid data so it prevents the false info in practice_sessions
 
+    // Stores effort level as a string to avoid invalid enum values
     @Enumerated(EnumType.STRING)
     private EffortLevel effortLevel;
-    // Add this to link to the User
 
+    // Links the practice session to a specific user
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
+    // Optional notes about the practice session
     private String notes;
-
 }

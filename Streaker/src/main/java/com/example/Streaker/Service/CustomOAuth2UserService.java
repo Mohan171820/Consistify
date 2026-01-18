@@ -15,30 +15,35 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
+    // Repository used to fetch and store users
     private final UserRepository userRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) {
-        // 1. Get user info from Google
+
+        // 1. Fetch user details from OAuth provider (Google)
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        // 2. Extract details
+        // 2. Extract required user information
         String email = oAuth2User.getAttribute("email");
         String name = oAuth2User.getAttribute("name");
 
-        // 3. Save or Update user in our database
+        // 3. Check if the user already exists in the database
         Optional<User> userOptional = userRepository.findByEmail(email);
 
+        // 4. If user does not exist, create and save a new user
         if (userOptional.isEmpty()) {
             User newUser = User.builder()
                     .email(email)
-                    .name(name) // This will now work!
-                    .role(Role.USER) // Set a default role
-                    .password(null) // No local password for OAuth users
+                    .name(name)
+                    .role(Role.USER)     // Assign default role
+                    .password(null)      // OAuth users do not have a local password
                     .build();
+
             userRepository.save(newUser);
         }
 
+        // 5. Return OAuth user details to Spring Security
         return oAuth2User;
     }
 }

@@ -18,12 +18,19 @@ import java.util.stream.Collectors;
 @Service
 public class PracticeLoggingService {
 
+    // Repository to store and fetch practice sessions
     private final PracticeSessionRepository practiceSessionRepository;
+
+    // Repository to validate and fetch skills
     private final SkillRepository skillRepository;
+
+    // Mapper to convert between DTOs and entities
     private final PracticeMapper practiceMapper;
+
+    // Repository to fetch logged-in user details
     private final UserRepository userRepository;
 
-    // Constructor to inject all necessary repositories and the mapper
+    // Constructor to inject required dependencies
     public PracticeLoggingService(PracticeSessionRepository practiceSessionRepository,
                                   SkillRepository skillRepository,
                                   PracticeMapper practiceMapper,
@@ -34,51 +41,55 @@ public class PracticeLoggingService {
         this.userRepository = userRepository;
     }
 
-    /**
-     * This method logs a new practice session and links it to the logged-in user.
-     */
+    // Logs a new practice session for the currently logged-in user
     public void logPractice(PracticeLogRequest request) {
-        // First, we get the email of the person currently logged in via Google
+
+        // Get the email of the currently logged-in user
         String email = SecurityUtil.getCurrentUserEmail();
 
-        // We find that specific User in our database using their email
+        // Fetch the user from the database using email
         User currentUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found in database"));
 
-        // Fetch the skill from the database and make sure it is actually active
+        // Fetch the skill and ensure it belongs to the logged-in user and is active
         Skill skill = skillRepository
-                .findByIdAndUserAndActiveTrue(request.getSkillId(), currentUser) // The new name
-                .orElseThrow(() -> new IllegalArgumentException("Skill not found or belongs to another user"));
-        // Basic validation to ensure the practice time is at least 1 minute
+                .findByIdAndUserAndActiveTrue(request.getSkillId(), currentUser)
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Skill not found or belongs to another user")
+                );
+
+        // Validate that practice duration is valid
         if (request.getDurationMinutes() <= 0) {
             throw new IllegalArgumentException("Duration must be greater than zero");
         }
 
-        // Convert the Request Data (DTO) into a Database Object (Entity)
+        // Convert request DTO to PracticeSession entity
         PracticeSession session = practiceMapper.toEntity(request);
 
-        // Link the session to the correct Skill and the logged-in User
+        // Link session with the correct skill and user
         session.setSkill(skill);
         session.setUser(currentUser);
 
-        // Save the session details into the database
+        // Save the practice session to the database
         practiceSessionRepository.save(session);
     }
 
-    /**
-     * This method retrieves all practice sessions belonging ONLY to the logged-in user.
-     */
+    // Retrieves all practice sessions for the currently logged-in user
     public List<PracticeResponseDTO> getAllSessions() {
-        // Identify who is asking for the data by getting their email
+
+        // Get email of the logged-in user
         String email = SecurityUtil.getCurrentUserEmail();
+
+        // If no user is logged in, return an empty list
         if (email == null) {
-            return List.of();   // return empty list, NOT exception
+            return List.of();
         }
-        // Find the user record in our database
+
+        // Fetch user details from the database
         User currentUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Fetch only the sessions for this user and convert them to the response format (DTO)
+        // Fetch user's practice sessions and convert them to response DTOs
         return practiceSessionRepository
                 .findByUser(currentUser)
                 .stream()

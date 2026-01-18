@@ -10,29 +10,29 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-// This class acts as a container to move data from the website to our code
+// This DTO is used to receive practice log data from the client
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class PracticeLogRequest {
 
-    // Ensures the skill ID is provided and not empty
+    // Ensures the skill ID is provided
     @NotNull(message = "Skill ID is required")
     private Long skillId;
 
-    // Makes sure a date is picked for the practice
+    // Makes sure the practice date is provided and not in the future
     @NotNull(message = "Date is required")
     @PastOrPresent(message = "Date cannot be in the future")
     private LocalDate practiceDate;
 
-    // Checks that the time spent is at least 1 minute or more
+    // Ensures the practice duration is at least 1 minute
     @Min(value = 1, message = "Duration must be at least 1 minute")
     private int durationMinutes;
 
-    // Forces the user to select how hard they worked
-    @NotNull
+    // Forces the user to select the effort level for the practice
+    @NotNull(message = "Effort level is required")
     private EffortLevel effortLevel;
 
-    // Optional field where the user can write extra details
+    // Optional field for additional notes about the practice
     private String notes;
 }

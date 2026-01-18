@@ -4,12 +4,23 @@ import com.example.Streaker.Entity.EffortLevel;
 import lombok.Builder;
 import java.time.LocalDate;
 
+// This DTO is used to send practice session data back to the client
 @Builder
 public record PracticeResponseDTO(
-        Long skillId,
-        String skillName,
-        LocalDate practiceDate,
-        int durationMinutes,
-        EffortLevel effortLevel){
 
+        // ID of the practiced skill
+        Long skillId,
+
+        // Name of the practiced skill
+        String skillName,
+
+        // Date on which the practice was done
+        LocalDate practiceDate,
+
+        // Duration of the practice session in minutes
+        int durationMinutes,
+
+        // Effort level applied during the practice
+        EffortLevel effortLevel
+) {
 }

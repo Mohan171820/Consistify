@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
+    // Repository used to fetch user details from the database
     private final UserRepository userRepository;
 
+    // Constructor injection of UserRepository
     public CustomUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -19,9 +21,13 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {
 
+        // Fetch user by email and return UserDetails
+        // Throws exception if user is not found
         return userRepository.findByEmail(email)
                 .orElseThrow(() ->
-                        new UsernameNotFoundException("User not found with email: " + email)
+                        new UsernameNotFoundException(
+                                "User not found with email: " + email
+                        )
                 );
     }
 }
