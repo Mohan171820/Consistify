@@ -8,16 +8,32 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PracticeSessionRepository extends JpaRepository<PracticeSession, Long> {
 
-    // Finds all practice sessions linked to a specific user
+    // Fetch all practice sessions of a user
     List<PracticeSession> findByUser(User user);
 
-    // Finds all practice sessions using the user ID through the Skill entity
+    // Fetch all sessions for a user by skill ID
+    List<PracticeSession> findByUserAndSkillId(User user, Long skillId);
+
+    // Fetch all sessions for a user by skill name
+    List<PracticeSession> findByUserAndSkillNameIgnoreCase(User user, String skillName);
+
+    // Fetch all sessions via skill owner (alternate method)
     List<PracticeSession> findBySkillUserId(Long userId);
 
-    // Checks if a practice session already exists for a skill on a given date
+    // Check duplicate practice entry for a skill on same day
     boolean existsBySkillAndPracticeDate(Skill skill, LocalDate practiceDate);
+
+    // Last practice date for a skill (for decay)
+    Optional<PracticeSession> findTopByUserAndSkillIdOrderByPracticeDateDesc(User user, Long skillId);
+
+    // Last practice session for user (for progress)
+    Optional<PracticeSession> findTopByUserOrderByPracticeDateDesc(User user);
+
+    // Fetch sessions in a date range (analytics / charts)
+    List<PracticeSession> findByUserAndPracticeDateBetween(User user, LocalDate start, LocalDate end);
 }

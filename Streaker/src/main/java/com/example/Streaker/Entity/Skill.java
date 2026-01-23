@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name="skills")
 @Data     // Lombok is implemented instead of getters and setters
@@ -30,4 +32,6 @@ public class Skill {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = true)
     private User user;
+    private LocalDate lastPracticedDate;
+
 }

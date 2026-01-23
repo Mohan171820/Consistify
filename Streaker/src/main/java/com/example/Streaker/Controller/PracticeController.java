@@ -10,25 +10,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/practice")
 @RequiredArgsConstructor
 public class PracticeController {
 
     private final PracticeLoggingService practiceLoggingService;
-    /**
-     * Receives practice data from the user, validates it, and saves it.
-     */
+
     @PostMapping("/log")
     public ResponseEntity<String> logPractice(@Valid @RequestBody PracticeLogRequest request) {
-        // Delegate the business logic to the service layer
         practiceLoggingService.logPractice(request);
         return ResponseEntity.ok("Practice logged successfully");
     }
-    @GetMapping
-    public List<PracticeResponseDTO> getAllPractices() {
+
+    @GetMapping("/my")
+    public List<PracticeResponseDTO> getMyPractices() {
         return practiceLoggingService.getAllSessions();
     }
 }
+
+
 
