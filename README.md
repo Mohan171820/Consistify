@@ -32,6 +32,7 @@ The system is designed to encourage continuous learning and prevent long gaps be
 - Prevent duplicate practice entries for the same skill on the same day
 - Clean DTO-based API design
 - Automated Entity ↔ DTO mapping using MapStruct
+- Added the feature to add uel of youtube to calculate time spent to learn a skill using Youtube
 
 ---
 
@@ -184,6 +185,8 @@ Helps users focus on neglected skills
 
 This logic is handled in the service layer, making it easy to improve or replace later.
 
+With the new update the streak and productivity is calculated even by time spent to learn using the youtube video.
+
 ---
 ## Future Integration: Spring AI
 
@@ -193,16 +196,11 @@ Why Spring AI?
 
 Spring AI allows easy integration with:
 
-OpenAI
-
-Azure OpenAI
-
-HuggingFace
-
 Local LLMs (Ollama, LM Studio)
 
 Without tightly coupling AI logic into your core system.
 
-![API.png](Streaker/docs/images/API.png)
-![Get APi.png](Streaker/docs/images/Get%20APi.png)
-![Schemas.png](Streaker/docs/images/Schemas.png)
+---
+![Endpoints.png](Streaker/docs/images/Endpoints.png)
+![endpoint.png](Streaker/docs/images/endpoint.png)
+![Frontend.png](Streaker/docs/images/Frontend.png)
