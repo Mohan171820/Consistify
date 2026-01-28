@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>YouTube Learning Tracker</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #f6f7f9;
+            margin: 0;
+            padding: 0;
+            color: #111827;
+        }
+        .container {
+            max-width: 780px;
+            margin: 60px auto;
+            background: #ffffff;
+            padding: 32px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+
+        h2 {
+            margin: 0;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        h3 {
+            margin-top: 36px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* INPUT */
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 24px;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            font-size: 14px;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+        }
+
+        button {
+            padding: 12px 16px;
+            font-size: 14px;
+            background: #111827;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #000000;
+        }
+
+        .hint {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #6b7280;
+            text-align: center;
+        }
+
+        /* PLAYER */
+        .player-wrapper {
+            margin-top: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* HISTORY */
+        .history-list {
+            margin-top: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .history-card {
+            padding: 12px 14px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .history-card span {
+            line-height: 1.4;
+        }
+
+        .history-card button {
+            background: #e5e7eb;
+            color: #111827;
+            padding: 6px 10px;
+            font-size: 12px;
+        }
+
+        .history-card button:hover {
+            background: #d1d5db;
+        }
+
+        .empty {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .footer {
+            margin-top: 40px;
+            font-size: 12px;
+            color: #9ca3af;
+            text-align: center;
+        }
+        select {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+}
+#timerDisplay {
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>YouTube Learning Tracker</h2>
+
+    <!-- INPUT -->
+    <div class="input-group">
+        <input type="text" id="ytUrl" placeholder="Paste YouTube video URL">
+        <button id="startBtn">Start</button>
+    </div>
+
+    <div class="hint">
+        Watch videos only inside this page to track time
+    </div>
+    <h3>🧠 Practice Timer</h3>
+
+    <div class="input-group">
+        <select id="platform">
+            <option value="LEETCODE">LeetCode</option>
+            <option value="CODECHEF">CodeChef</option>
+            <option value="PROJECT">Project</option>
+            <option value="READING">Reading</option>
+        </select>
+
+        <input type="text" id="topic" placeholder="Topic (Arrays, DP, Graphs)">
+    </div>
+
+    <div class="input-group">
+        <button onclick="startPractice()">Start Practice</button>
+        <button onclick="stopPractice()">Stop Practice</button>
+    </div>
+
+    <p id="timerDisplay">⏱️ 00:00</p>
+
+
+    <!-- PLAYER -->
+    <h3>Currently Watching</h3>
+    <div class="player-wrapper">
+        <div id="player"></div>
+    </div>
+
+    <!-- HISTORY -->
+    <h3>Previously Watched</h3>
+    <div id="historyList" class="history-list">
+        <p class="empty">No videos watched yet</p>
+    </div>
+
+    <div class="footer">
+        Learning time is tracked automatically
+    </div>
+</div>
+
+<script src="https://www.youtube.com/iframe_api"></script>
+
+<script>
+    const startBtn = document.getElementById("startBtn");
+    const ytUrlInput = document.getElementById("ytUrl");
+
+    let player;
+    let interval = null;
+    let sessionSeconds = 0;
+
+    startBtn.onclick = startLearning;
+
+    function startLearning() {
+        const url = ytUrlInput.value.trim();
+        if (!url) return alert("Paste YouTube URL");
+
+        fetch("/api/youtube/video", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ youtubeUrl: url })
+        })
+        .then(() => fetch("/api/youtube/current"))
+        .then(res => res.json())
+        .then(data => loadPlayer(data.videoId));
+    }
+
+    function loadPlayer(videoId) {
+        if (player) {
+            player.loadVideoById(videoId);
+            return;
+        }
+
+        player = new YT.Player("player", {
+            height: "360",
+            width: "640",
+            videoId,
+            events: { onStateChange }
+        });
+    }
+
+    function onStateChange(event) {
+        if (event.data === YT.PlayerState.PLAYING) {
+            startTracking();
+        } else {
+            stopAndSend();
+        }
+    }
+
+    function startTracking() {
+        if (interval) return;
+        interval = setInterval(() => sessionSeconds++, 1000);
+    }
+
+    function stopAndSend() {
+        if (!interval) return;
+
+        clearInterval(interval);
+        interval = null;
+
+        if (sessionSeconds > 0) {
+            const data = player.getVideoData();
+
+            fetch("/api/youtube/watch-time", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    videoId: data.video_id,
+                    title: data.title,
+                    watchedSeconds: sessionSeconds
+                })
+            }).then(loadHistory);
+
+            sessionSeconds = 0;
+        }
+    }
+
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden) stopAndSend();
+    });
+
+    function loadHistory() {
+        fetch("/api/youtube/history")
+            .then(res => res.json())
+            .then(videos => {
+                const list = document.getElementById("historyList");
+                list.innerHTML = "";
+
+                if (!videos.length) {
+                    list.innerHTML = `<p class="empty">No videos watched yet</p>`;
+                    return;
+                }
+
+                videos.forEach(v => {
+                    list.innerHTML += `
+                        <div class="history-card">
+                            <span>
+                                ${v.title}<br>
+                                ${(v.watchedSeconds / 60).toFixed(1)} mins
+                            </span>
+                            <button onclick="loadPlayer('${v.videoId}')">
+                                Watch
+                            </button>
+                        </div>
+                    `;
+                });
+            });
+    }
+    let practiceTimer = null;
+let practiceSeconds = 0;
+
+function startPractice() {
+    if (practiceTimer) return;
+
+    practiceSeconds = 0;
+    updateTimerDisplay();
+
+    practiceTimer = setInterval(() => {
+        practiceSeconds++;
+        updateTimerDisplay();
+    }, 1000);
+}
+
+function stopPractice() {
+    if (!practiceTimer) return;
+
+    clearInterval(practiceTimer);
+    practiceTimer = null;
+
+    alert(`Practice time: ${Math.floor(practiceSeconds / 60)} minutes`);
+
+    // later → send this to backend
+}
+
+function updateTimerDisplay() {
+    const minutes = String(Math.floor(practiceSeconds / 60)).padStart(2, "0");
+    const seconds = String(practiceSeconds % 60).padStart(2, "0");
+    document.getElementById("timerDisplay").innerText =
+        `⏱️ ${minutes}:${seconds}`;
+}
+
+
+    window.onload = loadHistory;
+</script>
+
+</body>
+</html>
