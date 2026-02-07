@@ -122,25 +122,17 @@ Ensures reliable & safe input handling
 └── mvnw.cmd
 ```
  ---
-## Tech Stack
-Technology	                  Purpose
+## Tools & Workflow
 
-Spring Boot	               Backend Framework
-
-Spring Data JPA     	   ORM & DB Access
-
-Hibernate Validator	       Input Validation
-
-PostgreSQL	               Database
-
-Lombok	                   Boilerplate Reduction
-
-Maven	                   Build Tool
-
-GraphQL (Optional)	       Advanced Query Support
-
-
-
+- Backend: Spring Boot (REST APIs, DTOs, services, repositories)
+- Frontend: HTML, CSS, JavaScript (AI-assisted UI scaffolding)
+- Database: (your DB)
+- Focus Areas:
+    - Backend architecture & business logic
+    - API design and data consistency
+    - Frontend–backend integration
+    - Learning analytics & streak tracking
+  
 ---
 ## Core Features
 🔹 Skill Management
