@@ -2,329 +2,2125 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Streaker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streaker - Track Your Learning Journey</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Darker+Grotesque:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
-        /* =====================
-       GLOBAL RESET
-    ===================== */
-    * {
-        box-sizing: border-box;
-    }
+        :root {
+            --primary: #ff3366;
+            --primary-dark: #cc0033;
+            --secondary: #6366f1;
+            --accent: #fbbf24;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
 
-    body {
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        background: linear-gradient(135deg, #eef2ff, #f8fafc);
-        margin: 0;
-        padding: 0;
-        color: #0f172a;
-    }
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #15151f;
+            --bg-tertiary: #1f1f2e;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --bg-card-hover: rgba(255, 255, 255, 0.06);
 
-    /* =====================
-       MAIN CONTAINER
-    ===================== */
-    .container {
-        max-width: 820px;
-        margin: 60px auto;
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(10px);
-        padding: 36px;
-        border-radius: 16px;
-        box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
-        border: 1px solid rgba(226, 232, 240, 0.8);
-    }
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
 
-    /* =====================
-       HEADINGS
-    ===================== */
-    h2 {
-        text-align: center;
-        font-size: 26px;
-        font-weight: 700;
-        letter-spacing: -0.5px;
-    }
+            --border: rgba(255, 255, 255, 0.1);
+            --border-hover: rgba(255, 255, 255, 0.2);
 
-    h3 {
-        margin-top: 42px;
-        font-size: 15px;
-        font-weight: 600;
-        color: #334155;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
+            --glow-primary: 0 0 30px rgba(255, 51, 102, 0.3);
+            --glow-secondary: 0 0 30px rgba(99, 102, 241, 0.3);
 
-    /* =====================
-       INPUT GROUPS
-    ===================== */
-    .input-group {
-        display: flex;
-        gap: 12px;
-        margin-top: 20px;
-    }
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
 
-    /* =====================
-       INPUTS & SELECTS
-    ===================== */
-    input,
-    select {
-        flex: 1;
-        height: 46px;
-        padding: 0 14px;
-        font-size: 14px;
-        border-radius: 10px;
-        border: 1px solid #e2e8f0;
-        background: #ffffff;
-        transition: all 0.2s ease;
-    }
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-    input::placeholder {
-        color: #94a3b8;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    input:focus,
-    select:focus {
-        outline: none;
-        border-color: #6366f1;
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
-    }
+        body {
+            font-family: 'Darker Grotesque', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
 
-    /* =====================
-       BUTTONS
-    ===================== */
-    button {
-        height: 46px;
-        padding: 0 20px;
-        font-size: 14px;
-        font-weight: 600;
-        background: linear-gradient(135deg, #6366f1, #4f46e5);
-        color: white;
-        border: none;
-        border-radius: 12px;
-        cursor: pointer;
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
-        box-shadow: 0 10px 20px rgba(79, 70, 229, 0.25);
-    }
+        /* Animated background gradient */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(255, 51, 102, 0.1), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.1), transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(251, 191, 36, 0.05), transparent 40%);
+            animation: gradientShift 15s ease infinite;
+            z-index: -1;
+        }
 
-    button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 14px 28px rgba(79, 70, 229, 0.35);
-    }
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
 
-    /* =====================
-       HINT TEXT
-    ===================== */
-    .hint {
-        margin-top: 10px;
-        font-size: 12px;
-        color: #64748b;
-        text-align: center;
-    }
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
 
-    /* =====================
-       PRACTICE GRID
-    ===================== */
-    .practice-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 18px;
-        margin-top: 24px;
-    }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
 
-    .practice-grid-full {
-        grid-column: span 2;
-    }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
 
-    /* =====================
-       TIMER
-    ===================== */
-    #timerDisplay {
-        margin-top: 14px;
-        font-size: 18px;
-        font-weight: 700;
-        color: #4f46e5;
-    }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
 
-    /* =====================
-       HISTORY / CARDS
-    ===================== */
-    .history-list {
-        margin-top: 18px;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
+        /* NAVBAR */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2rem;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
 
-    .history-card {
-        padding: 14px 16px;
-        border-radius: 14px;
-        background: linear-gradient(135deg, #f8fafc, #eef2ff);
-        border: 1px solid #e2e8f0;
-        font-size: 14px;
-        line-height: 1.5;
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
 
-    .history-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
-    }
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            animation: pulse 2s ease-in-out infinite;
+        }
 
-    /* =====================
-       PLAYER
-    ===================== */
-    .player-wrapper {
-        margin-top: 18px;
-        display: flex;
-        justify-content: center;
-    }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
 
-    /* =====================
-       EMPTY & FOOTER
-    ===================== */
-    .empty {
-        font-size: 13px;
-        color: #94a3b8;
-    }
+        .logo-text {
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-    .footer {
-        margin-top: 48px;
-        font-size: 12px;
-        color: #94a3b8;
-        text-align: center;
-    }
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
 
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 600;
+            transition: var(--transition);
+            position: relative;
+        }
 
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .user-trigger {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-lg);
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .user-trigger:hover {
+            background: var(--bg-card);
+            border-color: var(--border);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            width: 240px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 0.75rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: var(--transition);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .user-menu.active .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .dropdown-item:hover {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .dropdown-item.danger {
+            color: var(--danger);
+        }
+
+        /*  MAIN CONTAINER */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* HERO SECTION  */
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .hero-title {
+            font-size: 64px;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            letter-spacing: -2px;
+            line-height: 1.1;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 3s ease-in-out infinite;
+            background-size: 200% 200%;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero-subtitle {
+            font-size: 22px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /*  STATS OVERVIEW  */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-icon {
+            font-size: 32px;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--text-primary);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /*  DASHBOARD GRID */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        /*  CARDS */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            border-color: var(--border-hover);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-title-icon {
+            font-size: 24px;
+        }
+
+        .card-badge {
+            padding: 0.25rem 0.75rem;
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+
+        /* FORMS  */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-row-full {
+            grid-column: 1 / -1;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 15px;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 51, 102, 0.1);
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* ==================== BUTTONS ==================== */
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-family: inherit;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), #ff1a4d);
+            color: white;
+            box-shadow: var(--glow-primary);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 40px rgba(255, 51, 102, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary), #4f46e5);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--glow-secondary);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning), #d97706);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        /* ==================== TIMER ==================== */
+        .timer-display {
+            text-align: center;
+            padding: 2rem;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            margin: 1.5rem 0;
+        }
+
+        .timer-value {
+            font-size: 56px;
+            font-weight: 900;
+            font-family: 'Space Mono', monospace;
+            color: var(--primary);
+            text-shadow: 0 0 20px rgba(255, 51, 102, 0.3);
+            margin-bottom: 0.5rem;
+        }
+
+        .timer-label {
+            font-size: 14px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ==================== HISTORY LISTS ==================== */
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .history-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .history-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .history-item:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--border-hover);
+            transform: translateX(5px);
+        }
+
+        .history-item:hover::before {
+            opacity: 1;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.5rem;
+        }
+
+        .history-title {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--text-primary);
+        }
+
+        .history-meta {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .history-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .history-badge.low { color: var(--success); }
+        .history-badge.medium { color: var(--warning); }
+        .history-badge.high { color: var(--danger); }
+
+        /* ==================== VIDEO PLAYER ==================== */
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .video-wrapper iframe {
+            width: 100%;
+            height: 360px;
+            border: none;
+        }
+
+        .video-placeholder {
+            height: 360px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 1rem;
+            color: var(--text-muted);
+        }
+
+        .video-placeholder-icon {
+            font-size: 64px;
+            opacity: 0.3;
+        }
+
+        /* ==================== EMPTY STATE ==================== */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            opacity: 0.3;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state-text {
+            font-size: 15px;
+        }
+
+        /* ==================== HINTS ==================== */
+        .hint {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: rgba(251, 191, 36, 0.1);
+            border-left: 3px solid var(--accent);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-top: 1rem;
+        }
+
+        .hint-icon {
+            font-size: 18px;
+        }
+
+        /* ==================== FOOTER ==================== */
+        .footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-muted);
+            font-size: 14px;
+            border-top: 1px solid var(--border);
+            margin-top: 4rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .footer-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-link:hover {
+            color: var(--primary);
+        }
+
+        /* ==================== ANIMATIONS ==================== */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .fade-in-delay-1 { animation-delay: 0.1s; }
+        .fade-in-delay-2 { animation-delay: 0.2s; }
+        .fade-in-delay-3 { animation-delay: 0.3s; }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 1200px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .navbar {
+                padding: 0 1rem;
+            }
+
+            .hero-title {
+                font-size: 40px;
+            }
+
+            .hero-subtitle {
+                font-size: 18px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-link {
+                display: none;
+            }
+
+            .timer-value {
+                font-size: 40px;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .user-name {
+                display: none;
+            }
+
+            .toast-container {
+                left: 1rem;
+                right: 1rem;
+                max-width: none;
+            }
+
+            .toast {
+                min-width: auto;
+            }
+        }
+
+        /* ==================== LOADING SPINNER ==================== */
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ==================== MODAL ==================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9) translateY(20px);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            padding: 2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 20px;
+        }
+
+        .modal-close:hover {
+            background: var(--danger);
+            border-color: var(--danger);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .profile-section {
+            margin-bottom: 2rem;
+        }
+
+        .profile-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .profile-section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+        }
+
+        .profile-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .profile-info-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+        }
+
+        .profile-info-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-info-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .stats-chart {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .stats-chart-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 6px;
+            transition: width 1s ease-out;
+        }
+
+        .skill-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .skill-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .skill-item-name {
+            font-weight: 600;
+        }
+
+        .skill-item-level {
+            padding: 0.25rem 0.75rem;
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .skill-item-level.beginner { color: var(--accent); }
+        .skill-item-level.intermediate { color: var(--warning); }
+        .skill-item-level.advanced { color: var(--success); }
+        .skill-item-level.expert { color: var(--primary); }
+
+        /* ==================== NOTIFICATIONS/TOASTS ==================== */
+        .toast-container {
+            position: fixed;
+            top: 90px;
+            right: 2rem;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 400px;
+        }
+
+        .toast {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--primary);
+            border-radius: var(--radius-md);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            animation: slideIn 0.3s ease-out;
+            min-width: 300px;
+        }
+
+        .toast.success { border-left-color: var(--success); }
+        .toast.error { border-left-color: var(--danger); }
+        .toast.warning { border-left-color: var(--warning); }
+        .toast.info { border-left-color: var(--secondary); }
+
+        .toast-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .toast-message {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .toast-close {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 16px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+
+        .toast-close:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .toast.hiding {
+            animation: slideOut 0.3s ease-out forwards;
+        }
+
+        /* ==================== SKILL TAGS ==================== */
+        .skill-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .skill-tag:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--primary);
+        }
+
+        .skill-tag-icon {
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
+<!-- Toast Notifications Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="logo-container">
+        <!-- Option 1: Emoji Icon (Current) - Just change the emoji below -->
+        <div class="logo-icon">🔥</div>
+
+        <!-- Option 2: Text-based icon - Uncomment and edit the text -->
+        <!-- <div class="logo-icon" style="font-family: 'Space Mono', monospace; font-size: 20px;">ST</div> -->
+
+        <!-- Option 3: Image logo - Uncomment and replace with your image URL -->
+        <!-- <img src="your-logo.png" alt="Logo" style="width: 40px; height: 40px; border-radius: 10px;"> -->
+
+        <!-- Option 4: SVG Icon - Uncomment to use -->
+        <!-- <div class="logo-icon" style="padding: 8px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z" fill="url(#gradient)"/>
+                <defs>
+                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#ff3366"/>
+                        <stop offset="100%" style="stop-color:#6366f1"/>
+                    </linearGradient>
+                </defs>
+            </svg>
+        </div> -->
+
+        <div class="logo-text">Streaker</div>
+    </div>
+
+    <div class="nav-actions">
+        <a href="#" class="nav-link" onclick="scrollToSection('dashboard'); return false;">Dashboard</a>
+        <a href="#" class="nav-link" onclick="scrollToSection('practice'); return false;">Practice</a>
+        <a href="#" class="nav-link" onclick="showStatistics(); return false;">Analytics</a>
+
+        <div class="user-menu">
+            <div class="user-trigger" onclick="toggleUserMenu()">
+                <div class="user-avatar">MM</div>
+                <div class="user-name">Mohan Murali</div>
+                <span>▼</span>
+            </div>
+            <div class="dropdown-menu">
+                <div class="dropdown-item" onclick="showProfile()">
+                    <span>👤</span> Profile
+                </div>
+                <div class="dropdown-item" onclick="showSettings()">
+                    <span>⚙️</span> Settings
+                </div>
+                <div class="dropdown-item" onclick="showStatistics()">
+                    <span>📊</span> Statistics
+                </div>
+                <div style="height: 1px; background: var(--border); margin: 0.5rem 0;"></div>
+                <div class="dropdown-item danger" onclick="logout()">
+                    <span>🚪</span> Sign Out
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
 
 <div class="container">
-    <h2>Streaker</h2>
-
-    <!-- USER PROGRESS DASHBOARD -->
-    <h3>📊 Your Learning Progress</h3>
-    <div class="history-list" id="progressDashboard">
-        <p class="empty">Loading progress...</p>
+    <!-- HERO SECTION -->
+    <div class="hero fade-in">
+        <h1 class="hero-title">
+            Build Your <span class="hero-gradient">Learning Streak</span>
+        </h1>
+        <p class="hero-subtitle">
+            Track your practice sessions, watch educational content, and maintain consistent progress toward mastery
+        </p>
     </div>
 
-    <!-- YOUTUBE INPUT -->
-    <div class="input-group">
-        <input type="text" id="ytUrl" placeholder="Paste YouTube video URL">
-        <button id="startBtn">Start</button>
+    <!-- STATS OVERVIEW -->
+    <div class="stats-grid fade-in fade-in-delay-1" id="dashboard">
+        <div class="stat-card">
+            <span class="stat-icon">🎯</span>
+            <div class="stat-value" id="totalSkillsStat">0</div>
+            <div class="stat-label">Total Skills</div>
+        </div>
+        <div class="stat-card">
+            <span class="stat-icon">✅</span>
+            <div class="stat-value" id="activeSkillsStat">0</div>
+            <div class="stat-label">Active Skills</div>
+        </div>
+        <div class="stat-card">
+            <span class="stat-icon">⚠️</span>
+            <div class="stat-value" id="atRiskSkillsStat">0</div>
+            <div class="stat-label">At-Risk Skills</div>
+        </div>
+        <div class="stat-card">
+            <span class="stat-icon">⏱️</span>
+            <div class="stat-value" id="totalMinutesStat">0</div>
+            <div class="stat-label">Total Minutes</div>
+        </div>
+        <div class="stat-card">
+            <span class="stat-icon">📅</span>
+            <div class="stat-value" id="lastPracticeStat">—</div>
+            <div class="stat-label">Last Practice</div>
+        </div>
     </div>
 
-    <div class="hint">Watch videos only inside this page to track time</div>
+    <!-- MAIN DASHBOARD -->
+    <div class="dashboard">
+        <!-- LEFT PANEL -->
+        <div class="left-panel">
+            <!-- YOUTUBE TRACKER -->
+            <div class="card fade-in fade-in-delay-2">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <span class="card-title-icon">📺</span>
+                        YouTube Learning Tracker
+                    </h3>
+                    <span class="card-badge">Video</span>
+                </div>
 
-    <!-- PRACTICE TIMER -->
-    <h3>🧠 Practice Timer</h3>
-    <div class="input-group">
-        <select id="platform">
-            <option value="LEETCODE">LeetCode</option>
-            <option value="CODECHEF">CodeChef</option>
-            <option value="PROJECT">Project</option>
-            <option value="READING">Reading</option>
-        </select>
-        <input type="text" id="topic" placeholder="Topic (Arrays, DP, Graphs)">
-    </div>
+                <div class="form-group">
+                    <label class="form-label">YouTube URL</label>
+                    <input
+                            type="text"
+                            id="ytUrl"
+                            placeholder="https://youtube.com/watch?v=..."
+                    >
+                </div>
 
-    <p id="timerDisplay">⏱️ 00:00</p>
+                <button class="btn btn-primary btn-block" onclick="startLearning()">
+                    <span>▶️</span> Start Watching
+                </button>
 
-    <!-- PRACTICE LOG -->
-    <h3>📒 Practice Session Log</h3>
+                <div class="hint">
+                    <span class="hint-icon">💡</span>
+                    <span>Watch videos on this page to automatically track your learning time</span>
+                </div>
+            </div>
+            <!-- ADD NEW SKILL -->
+            <div class="card fade-in">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <span class="card-title-icon">➕</span>
+                        Add New Skill
+                    </h3>
+                    <span class="card-badge">Create</span>
+                </div>
 
-    <div class="practice-grid">
-        <!-- Skill autocomplete (NO DROPDOWN BUG) -->
-        <input
-                type="text"
-                id="practiceSkillName"
-                list="skillsList"
-                placeholder="Start typing skill (Java, Spring Boot...)"
-        >
-        <datalist id="skillsList"></datalist>
+                <div class="form-group">
+                    <label class="form-label">Skill Name</label>
+                    <input
+                            type="text"
+                            id="newSkillName"
+                            placeholder="e.g., React, Spring Boot, DSA"
+                    >
+                </div>
 
-        <input type="date" id="practiceDate">
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <input
+                            type="text"
+                            id="newSkillCategory"
+                            placeholder="e.g., Programming, Backend, Frontend"
+                    >
+                </div>
 
-        <input type="number" id="practiceDuration" placeholder="Duration (minutes)">
+                <div class="form-group">
+                    <label class="form-label">Decay Days</label>
+                    <input
+                            type="number"
+                            id="newSkillDecayDays"
+                            value="7"
+                            min="1"
+                    >
+                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 0.5rem;">
+                        Days after which skill becomes at-risk if not practiced
+                    </div>
+                </div>
 
-        <select id="practiceEffort">
-            <option value="">Effort Level</option>
-            <option value="Low">Low</option>
-            <option value="Medium">Medium</option>
-            <option value="High">High</option>
-        </select>
+                <button class="btn btn-primary btn-block" onclick="createNewSkill()">
+                    <span>✨</span> Create Skill
+                </button>
+            </div>
 
-        <input
-                type="text"
-                id="practiceNotes"
-                placeholder="Notes (optional)"
-                class="practice-grid-full"
-        >
 
-        <button
-                onclick="logPracticeSession()"
-                class="practice-grid-full"
-        >
-            Log Practice Session
-        </button>
-    </div>
+            <!-- PRACTICE TIMER -->
+            <div class="card fade-in fade-in-delay-3" id="practice">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <span class="card-title-icon">⏱️</span>
+                        Practice Timer
+                    </h3>
+                    <span class="card-badge">Live</span>
+                </div>
 
-    <!-- PRACTICE HISTORY -->
-    <h3>📊 Practice History</h3>
-    <div id="practiceHistory" class="history-list">
-        <p class="empty">No practice sessions yet</p>
-    </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Platform</label>
+                        <select id="platform">
+                            <option>LeetCode</option>
+                            <option>CodeChef</option>
+                            <option>HackerRank</option>
+                            <option>Codeforces</option>
+                            <option>Project Work</option>
+                            <option>Reading</option>
+                            <option>Research</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
 
-    <!-- YOUTUBE PLAYER -->
-    <h3>Currently Watching</h3>
-    <div class="player-wrapper">
-        <div id="player"></div>
-    </div>
+                    <div class="form-group">
+                        <label class="form-label">Topic</label>
+                        <input
+                                type="text"
+                                id="topic"
+                                placeholder="e.g., Binary Trees"
+                        >
+                    </div>
+                </div>
 
-    <!-- YOUTUBE HISTORY -->
-    <h3>Previously Watched</h3>
-    <div id="historyList" class="history-list">
-        <p class="empty">No videos watched yet</p>
-    </div>
+                <div class="timer-display">
+                    <div class="timer-value" id="timerDisplay">00:00</div>
+                    <div class="timer-label">Practice Session</div>
+                </div>
 
-    <div class="footer">
-        Learning time is tracked automatically
+                <div class="btn-group">
+                    <button
+                            class="btn btn-success"
+                            id="startTimerBtn"
+                            onclick="startPracticeTimer()"
+                            style="flex: 1;"
+                    >
+                        <span>▶️</span> Start
+                    </button>
+                    <button
+                            class="btn btn-warning"
+                            id="pauseTimerBtn"
+                            onclick="pausePracticeTimer()"
+                            disabled
+                            style="flex: 1;"
+                    >
+                        <span>⏸️</span> Pause
+                    </button>
+                    <button
+                            class="btn btn-danger"
+                            id="stopTimerBtn"
+                            onclick="stopPracticeTimer()"
+                            disabled
+                            style="flex: 1;"
+                    >
+                        <span>⏹️</span> Stop
+                    </button>
+                </div>
+            </div>
+
+            <!-- LOG PRACTICE -->
+            <div class="card fade-in">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <span class="card-title-icon">📝</span>
+                        Log Practice Session
+                    </h3>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Skill Name</label>
+                    <input
+                            id="practiceSkillName"
+                            list="skillsList"
+                            placeholder="Start typing to search skills..."
+                    >
+                    <datalist id="skillsList"></datalist>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Date</label>
+                        <input type="date" id="practiceDate">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Duration (mins)</label>
+                        <input
+                                type="number"
+                                id="practiceDuration"
+                                placeholder="60"
+                                min="1"
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Effort Level</label>
+                    <select id="practiceEffort">
+                        <option value="">Select effort level...</option>
+                        <option value="Low">Low - Light practice</option>
+                        <option value="Medium">Medium - Focused work</option>
+                        <option value="High">High - Deep focus</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Notes (Optional)</label>
+                    <textarea
+                            id="practiceNotes"
+                            placeholder="What did you work on? Any key learnings or challenges?"
+                    ></textarea>
+                </div>
+
+                <button class="btn btn-primary btn-block" onclick="logPracticeSession()">
+                    <span>💾</span> Log Session
+                </button>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="right-panel">
+            <!-- CURRENTLY WATCHING -->
+            <div class="card fade-in fade-in-delay-2">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <span class="card-title-icon">🎬</span>
+                        Currently Watching
+                    </h3>
+                </div>
+
+                <div class="video-wrapper">
+                    <div id="player">
+                        <div class="video-placeholder">
+                            <div class="video-placeholder-icon">📹</div>
+                            <div>Paste a YouTube URL to start</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRACTICE HISTORY -->
+            <div class="card fade-in fade-in-delay-3">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <span class="card-title-icon">📜</span>
+                        Recent Practice
+                    </h3>
+                    <span class="card-badge" id="practiceCount">0</span>
+                </div>
+
+                <div id="practiceHistory" class="history-list">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📝</div>
+                        <div class="empty-state-text">No practice sessions logged yet</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIDEO HISTORY -->
+            <div class="card fade-in">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <span class="card-title-icon">🎥</span>
+                        Watch History
+                    </h3>
+                    <span class="card-badge" id="videoCount">0</span>
+                </div>
+
+                <div id="historyList" class="history-list">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📺</div>
+                        <div class="empty-state-text">No videos watched yet</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-</body>
+<!-- MODALS -->
+<!-- Profile Modal -->
+<div class="modal-overlay" id="profileModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 class="modal-title">
+                <span>👤</span> My Profile
+            </h2>
+            <div class="modal-close" onclick="closeModal('profileModal')">×</div>
+        </div>
+        <div class="modal-body">
+            <div class="profile-section">
+                <div class="profile-section-title">Personal Information</div>
+                <div class="profile-info-grid">
+                    <div class="profile-info-item">
+                        <div class="profile-info-label">Name</div>
+                        <div class="profile-info-value">Mohan Murali</div>
+                    </div>
+                    <div class="profile-info-item">
+                        <div class="profile-info-label">Email</div>
+                        <div class="profile-info-value">mohan@example.com</div>
+                    </div>
+                    <div class="profile-info-item">
+                        <div class="profile-info-label">Member Since</div>
+                        <div class="profile-info-value">Jan 2026</div>
+                    </div>
+                    <div class="profile-info-item">
+                        <div class="profile-info-label">Streak</div>
+                        <div class="profile-info-value">🔥 7 Days</div>
+                    </div>
+                </div>
+            </div>
 
+            <div class="profile-section">
+                <div class="profile-section-title">Quick Stats</div>
+                <div class="profile-info-grid">
+                    <div class="profile-info-item">
+                        <div class="profile-info-label">Total Practice</div>
+                        <div class="profile-info-value" id="profileTotalMinutes">0 mins</div>
+                    </div>
+                    <div class="profile-info-item">
+                        <div class="profile-info-label">Videos Watched</div>
+                        <div class="profile-info-value" id="profileVideoCount">0</div>
+                    </div>
+                    <div class="profile-info-item">
+                        <div class="profile-info-label">Active Skills</div>
+                        <div class="profile-info-value" id="profileActiveSkills">0</div>
+                    </div>
+                    <div class="profile-info-item">
+                        <div class="profile-info-label">Sessions Logged</div>
+                        <div class="profile-info-value" id="profileSessions">0</div>
+                    </div>
+                </div>
+            </div>
 
+            <div class="profile-section">
+                <button class="btn btn-primary btn-block" onclick="editProfile()">
+                    <span>✏️</span> Edit Profile
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal-overlay" id="settingsModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 class="modal-title">
+                <span>⚙️</span> Settings
+            </h2>
+            <div class="modal-close" onclick="closeModal('settingsModal')">×</div>
+        </div>
+        <div class="modal-body">
+            <div class="profile-section">
+                <div class="profile-section-title">Notifications</div>
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer;">
+                        <input type="checkbox" checked style="width: auto;">
+                        <span>Daily practice reminders</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer;">
+                        <input type="checkbox" checked style="width: auto;">
+                        <span>Weekly progress reports</span>
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer;">
+                        <input type="checkbox" style="width: auto;">
+                        <span>Streak break alerts</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <div class="profile-section-title">Preferences</div>
+                <div class="form-group">
+                    <label class="form-label">Time Zone</label>
+                    <select>
+                        <option>UTC +0:00</option>
+                        <option>UTC +5:30 (IST)</option>
+                        <option>UTC -5:00 (EST)</option>
+                        <option>UTC -8:00 (PST)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Default Practice Duration</label>
+                    <input type="number" value="60" min="15" step="15">
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <button class="btn btn-primary btn-block">
+                    <span>💾</span> Save Settings
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Modal -->
+<div class="modal-overlay" id="statisticsModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 class="modal-title">
+                <span>📊</span> Statistics & Analytics
+            </h2>
+            <div class="modal-close" onclick="closeModal('statisticsModal')">×</div>
+        </div>
+        <div class="modal-body">
+            <div class="profile-section">
+                <div class="profile-section-title">Overall Progress</div>
+                <div class="stats-chart">
+                    <div class="stats-chart-title">Practice Time This Week</div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span style="color: var(--text-secondary);">Goal: 420 mins</span>
+                        <span style="color: var(--text-primary); font-weight: 700;" id="weeklyProgress">0 mins</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="weeklyProgressBar" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="stats-chart">
+                    <div class="stats-chart-title">Skills Mastery</div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span style="color: var(--text-secondary);">Active Skills</span>
+                        <span style="color: var(--text-primary); font-weight: 700;" id="skillsMastery">0/0</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="skillsMasteryBar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <div class="profile-section-title">Top Skills</div>
+                <div class="skill-list" id="topSkillsList">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📚</div>
+                        <div class="empty-state-text">No skills tracked yet</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <div class="profile-section-title">Learning Streak</div>
+                <div class="stats-chart">
+                    <div style="text-align: center;">
+                        <div style="font-size: 48px; margin-bottom: 0.5rem;">🔥</div>
+                        <div style="font-size: 32px; font-weight: 900; color: var(--primary); font-family: 'Space Mono', monospace;">
+                            7 Days
+                        </div>
+                        <div style="font-size: 14px; color: var(--text-muted);">Current Streak</div>
+                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+                            <div style="font-size: 20px; font-weight: 700;">14 Days</div>
+                            <div style="font-size: 12px; color: var(--text-muted);">Best Streak</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div>© 2026 Streaker. Built with passion by Mohan Murali.</div>
+    <div class="footer-links">
+        <a href="#" class="footer-link">Privacy Policy</a>
+        <a href="#" class="footer-link">Terms of Service</a>
+        <a href="#" class="footer-link">Help & Support</a>
+    </div>
+</footer>
+
+<!-- SCRIPTS -->
 <script src="https://www.youtube.com/iframe_api"></script>
-
 <script>
-    function loadUserProgress() {
-    fetch("/api/v1/progress/me")
-        .then(res => res.json())
-        .then(p => {
-            document.getElementById("progressDashboard").innerHTML = `
-                <div class="history-card">📚 Total Skills: <strong>${p.totalSkills}</strong></div>
-                <div class="history-card">✅ Active Skills: <strong>${p.activeSkills}</strong></div>
-                <div class="history-card">⚠️ At-Risk Skills: <strong>${p.atRiskSkills}</strong></div>
-                <div class="history-card">⏱️ Total Practice: <strong>${p.totalPracticeMinutes} mins</strong></div>
-                <div class="history-card">🗓️ Last Practice: <strong>${p.lastPracticeDate ?? "N/A"}</strong></div>
-            `;
+    // ==================== TOAST NOTIFICATIONS ====================
+    function showToast(message, type = 'info', title = '', duration = 4000) {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+
+        const icons = {
+            success: '✅',
+            error: '❌',
+            warning: '⚠️',
+            info: 'ℹ️'
+        };
+
+        const titles = {
+            success: title || 'Success',
+            error: title || 'Error',
+            warning: title || 'Warning',
+            info: title || 'Info'
+        };
+
+        toast.innerHTML = `
+            <div class="toast-icon">${icons[type]}</div>
+            <div class="toast-content">
+                <div class="toast-title">${titles[type]}</div>
+                <div class="toast-message">${message}</div>
+            </div>
+            <button class="toast-close" onclick="removeToast(this.parentElement)">×</button>
+        `;
+
+        container.appendChild(toast);
+
+        // Auto-remove after duration
+        setTimeout(() => {
+            removeToast(toast);
+        }, duration);
+    }
+
+    function removeToast(toast) {
+        toast.classList.add('hiding');
+        setTimeout(() => {
+            if (toast.parentElement) {
+                toast.parentElement.removeChild(toast);
+            }
+        }, 300);
+    }
+    // ==================== USER MENU ====================
+    function toggleUserMenu() {
+        const menu = document.querySelector('.user-menu');
+        menu.classList.toggle('active');
+    }
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        const menu = document.querySelector('.user-menu');
+        if (!menu.contains(e.target)) {
+            menu.classList.remove('active');
+        }
+    });
+
+    // ==================== MODAL FUNCTIONS ====================
+    function openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+        }
+    }
+
+    function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.remove('active');
+            document.body.style.overflow = ''; // Restore scrolling
+        }
+    }
+
+    // Close modal when clicking on overlay
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('modal-overlay')) {
+            closeModal(e.target.id);
+        }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const activeModals = document.querySelectorAll('.modal-overlay.active');
+            activeModals.forEach(modal => closeModal(modal.id));
+        }
+    });
+
+    function showProfile() {
+        // Close user menu
+        document.querySelector('.user-menu').classList.remove('active');
+
+        // Load user data from backend
+        fetch('/api/user/me', {
+            credentials: 'same-origin'
         })
-        .catch(() => {
-            document.getElementById("progressDashboard").innerHTML =
-                `<p class="empty">Failed to load progress</p>`;
+        .then(response => response.json())
+        .then(user => {
+            // Update profile modal with real user data
+            const profileModal = document.getElementById('profileModal');
+
+            // Update name
+            const nameElement = profileModal.querySelector('.profile-info-value');
+            if (nameElement && user.name) {
+                nameElement.textContent = user.name;
+            }
+
+            // Update email
+            const emailElements = profileModal.querySelectorAll('.profile-info-value');
+            if (emailElements[1] && user.email) {
+                emailElements[1].textContent = user.email;
+            }
+
+            // Update member since (if available)
+            if (user.createdAt) {
+                const memberDate = new Date(user.createdAt);
+                const formattedDate = memberDate.toLocaleDateString('en-US', {
+                    month: 'short',
+                    year: 'numeric'
+                });
+                if (emailElements[2]) {
+                    emailElements[2].textContent = formattedDate;
+                }
+            }
+        })
+        .catch(err => console.error('Failed to load user data:', err));
+
+        // Load practice statistics
+        Promise.all([
+            fetch("/api/v1/progress/me").then(r => r.json()),
+            fetch("/api/v1/practice/my").then(r => r.json()),
+            fetch("/api/youtube/history").then(r => r.json())
+        ])
+        .then(([progress, practice, videos]) => {
+            document.getElementById('profileTotalMinutes').textContent =
+                `${progress.totalPracticeMinutes || 0} mins`;
+            document.getElementById('profileVideoCount').textContent = videos.length || 0;
+            document.getElementById('profileActiveSkills').textContent = progress.activeSkills || 0;
+            document.getElementById('profileSessions').textContent = practice.length || 0;
+        })
+        .catch(err => console.error('Failed to load profile data:', err));
+
+        openModal('profileModal');
+    }
+
+    function showSettings() {
+        document.querySelector('.user-menu').classList.remove('active');
+        openModal('settingsModal');
+    }
+
+    function showStatistics() {
+        // Close user menu
+        document.querySelector('.user-menu').classList.remove('active');
+
+        // Load statistics data
+        Promise.all([
+            fetch("/api/v1/progress/me").then(r => r.json()),
+            fetch("/api/v1/practice/my").then(r => r.json()),
+            fetch("/api/v1/skills?userId=1").then(r => r.json())
+        ])
+        .then(([progress, practice, skills]) => {
+            // Calculate weekly progress
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+            const weeklyMinutes = practice
+                .filter(p => new Date(p.practiceDate) >= oneWeekAgo)
+                .reduce((sum, p) => sum + p.durationMinutes, 0);
+
+            const weeklyGoal = 420; // 7 hours per week
+            const weeklyPercent = Math.min((weeklyMinutes / weeklyGoal) * 100, 100);
+
+            document.getElementById('weeklyProgress').textContent = `${weeklyMinutes} mins`;
+            document.getElementById('weeklyProgressBar').style.width = `${weeklyPercent}%`;
+
+            // Skills mastery
+            const activeSkills = progress.activeSkills || 0;
+            const totalSkills = progress.totalSkills || 0;
+            const masteryPercent = totalSkills > 0 ? (activeSkills / totalSkills) * 100 : 0;
+
+            document.getElementById('skillsMastery').textContent = `${activeSkills}/${totalSkills}`;
+            document.getElementById('skillsMasteryBar').style.width = `${masteryPercent}%`;
+
+            // Top skills by practice time
+            const skillPracticeTime = {};
+            practice.forEach(p => {
+                skillPracticeTime[p.skillName] = (skillPracticeTime[p.skillName] || 0) + p.durationMinutes;
+            });
+
+            const topSkills = Object.entries(skillPracticeTime)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+
+            const topSkillsContainer = document.getElementById('topSkillsList');
+            if (topSkills.length === 0) {
+                topSkillsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📚</div>
+                        <div class="empty-state-text">No skills tracked yet</div>
+                    </div>
+                `;
+            } else {
+                topSkillsContainer.innerHTML = topSkills.map(([skillName, minutes]) => {
+                    let level = 'beginner';
+                    let levelText = 'Beginner';
+                    if (minutes >= 600) { level = 'expert'; levelText = 'Expert'; }
+                    else if (minutes >= 300) { level = 'advanced'; levelText = 'Advanced'; }
+                    else if (minutes >= 100) { level = 'intermediate'; levelText = 'Intermediate'; }
+
+                    return `
+                        <div class="skill-item">
+                            <div>
+                                <div class="skill-item-name">${skillName}</div>
+                                <div style="font-size: 13px; color: var(--text-muted); margin-top: 0.25rem;">
+                                    ${minutes} minutes practiced
+                                </div>
+                            </div>
+                            <div class="skill-item-level ${level}">${levelText}</div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        })
+        .catch(err => console.error('Failed to load statistics:', err));
+
+        openModal('statisticsModal');
+    }
+
+    function editProfile() {
+        showToast('Edit profile feature coming soon! This would allow you to update your name, email, avatar, and other personal information.', 'info', 'Coming Soon', 5000);
+    }
+
+    // ==================== USER AUTHENTICATION ====================
+    function loadCurrentUser() {
+        // Fetch current authenticated user from Spring Boot
+        fetch('/api/user/me', {
+            credentials: 'same-origin'
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Not authenticated');
+            }
+            return response.json();
+        })
+        .then(user => {
+            // Update UI with user information
+            if (user.name) {
+                document.querySelector('.user-name').textContent = user.name;
+            }
+
+            // Update avatar with initials
+            if (user.name) {
+                const initials = user.name.split(' ')
+                    .map(n => n[0])
+                    .join('')
+                    .toUpperCase()
+                    .substring(0, 2);
+                document.querySelector('.user-avatar').textContent = initials;
+            }
+
+            // Update profile modal if user data available
+            if (user.email) {
+                // Store user data for profile modal
+                window.currentUser = user;
+            }
+        })
+        .catch(err => {
+            console.error('Failed to load user:', err);
+            // If user is not authenticated, redirect to login
+            // Uncomment the line below if you want auto-redirect
+            // window.location.href = '/login';
         });
+    }
+
+    function logout() {
+        document.querySelector('.user-menu').classList.remove('active');
+
+        if (confirm('🚪 Are you sure you want to sign out?')) {
+            // Show loading toast
+            showToast('Logging out...', 'info', 'Please wait');
+
+            // Clear local data
+            localStorage.clear();
+            sessionStorage.clear();
+
+            // Redirect to Spring Boot logout endpoint
+            // Your SecurityConfig has logout configured with logoutSuccessUrl("/")
+            window.location.href = '/logout';
+        }
+    }
+
+    // ==================== NAVIGATION ====================
+    function scrollToSection(sectionId) {
+        const element = document.getElementById(sectionId);
+        if (element) {
+            const navbarHeight = 70;
+            const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+            const offsetPosition = elementPosition - navbarHeight - 20;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+        }
+    }
+
+    // ==================== SKILL MANAGEMENT ====================
+    let skillsCache = [];
+
+    function getSkillIdByName(name) {
+        const skill = skillsCache.find(s => s.name === name);
+        return skill ? skill.id : null;
+    }
+
+    function loadSkills() {
+        fetch("/api/v1/skills?userId=1")
+            .then(res => res.json())
+            .then(data => {
+                skillsCache = data;
+                const datalist = document.getElementById("skillsList");
+                datalist.innerHTML = data.map(s => `<option value="${s.name}">`).join("");
+            })
+            .catch(err => console.error('Failed to load skills:', err));
+    }
+    function createNewSkill() {
+    const name = document.getElementById("newSkillName").value.trim();
+    const category = document.getElementById("newSkillCategory").value.trim();
+    const decayDays = document.getElementById("newSkillDecayDays").value;
+
+    // Validation
+    if (!name) {
+        showToast("Please enter a skill name", "warning");
+        return;
+    }
+
+    if (!category) {
+        showToast("Please enter a category", "warning");
+        return;
+    }
+
+    if (!decayDays || decayDays < 1) {
+        showToast("Decay days must be at least 1", "warning");
+        return;
+    }
+
+    const payload = {
+        name: name,
+        category: category,
+        decayDays: Number(decayDays),
+        userId: 1 // 🔴 Replace later with logged-in user ID
+    };
+
+    fetch("/api/v1/skills", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    })
+    .then(res => {
+        if (!res.ok) throw new Error("Failed to create skill");
+        return res.json();
+    })
+    .then(() => {
+        showToast(`Skill "${name}" created successfully! 🎉`, "success");
+
+        // Reset form
+        document.getElementById("newSkillName").value = "";
+        document.getElementById("newSkillCategory").value = "";
+        document.getElementById("newSkillDecayDays").value = "7";
+
+        // Refresh UI
+        loadSkills();
+        loadUserProgress();
+    })
+    .catch(err => {
+        console.error(err);
+        showToast("Failed to create skill", "error");
+    });
 }
 
+
+    // ==================== PROGRESS DASHBOARD ====================
+    function loadUserProgress() {
+        fetch("/api/v1/progress/me")
+            .then(res => res.json())
+            .then(p => {
+                // Update stats
+                document.getElementById("totalSkillsStat").textContent = p.totalSkills || 0;
+                document.getElementById("activeSkillsStat").textContent = p.activeSkills || 0;
+                document.getElementById("atRiskSkillsStat").textContent = p.atRiskSkills || 0;
+                document.getElementById("totalMinutesStat").textContent = p.totalPracticeMinutes || 0;
+                document.getElementById("lastPracticeStat").textContent =
+                    p.lastPracticeDate ? new Date(p.lastPracticeDate).toLocaleDateString() : "—";
+            })
+            .catch(err => {
+                console.error('Failed to load progress:', err);
+            });
+    }
+
+    // ==================== YOUTUBE FUNCTIONALITY ====================
     let player, interval = null, sessionSeconds = 0;
 
-    document.getElementById("startBtn").onclick = startLearning;
-
-    /* -------------------- YOUTUBE -------------------- */
-
     function startLearning() {
-        const url = ytUrl.value.trim();
-        if (!url) return alert("Paste YouTube URL");
+        const url = document.getElementById("ytUrl").value.trim();
+        if (!url) {
+            showToast("Please paste a YouTube URL first", "warning");
+            return;
+        }
 
         fetch("/api/youtube/video", {
             method: "POST",
@@ -333,17 +2129,32 @@
         })
         .then(() => fetch("/api/youtube/current"))
         .then(res => res.json())
-        .then(data => loadPlayer(data.videoId));
+        .then(data => {
+            loadPlayer(data.videoId);
+            showToast("Video loaded successfully!", "success");
+        })
+        .catch(err => {
+            console.error('Failed to start video:', err);
+            showToast("Failed to load video. Please check the URL.", "error");
+        });
     }
 
     function loadPlayer(videoId) {
-        if (player) return player.loadVideoById(videoId);
+        if (player) {
+            player.loadVideoById(videoId);
+            return;
+        }
 
         player = new YT.Player("player", {
             height: "360",
-            width: "640",
-            videoId,
-            events: { onStateChange }
+            width: "100%",
+            videoId: videoId,
+            playerVars: {
+                'playsinline': 1
+            },
+            events: {
+                onStateChange: onStateChange
+            }
         });
     }
 
@@ -361,16 +2172,18 @@
         interval = null;
 
         if (sessionSeconds > 0) {
-            const v = player.getVideoData();
+            const videoData = player.getVideoData();
             fetch("/api/youtube/watch-time", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    videoId: v.video_id,
-                    title: v.title,
+                    videoId: videoData.video_id,
+                    title: videoData.title,
                     watchedSeconds: sessionSeconds
                 })
-            }).then(loadYoutubeHistory);
+            })
+            .then(() => loadYoutubeHistory())
+            .catch(err => console.error('Failed to log watch time:', err));
 
             sessionSeconds = 0;
         }
@@ -380,85 +2193,195 @@
         fetch("/api/youtube/history")
             .then(res => res.json())
             .then(data => {
-                historyList.innerHTML = data.length
-                    ? data.map(v => `
-                        <div class="history-card">
-                            ${v.title}<br>${(v.watchedSeconds / 60).toFixed(1)} mins
+                const container = document.getElementById("historyList");
+                document.getElementById("videoCount").textContent = data.length;
+
+                if (data.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📺</div>
+                            <div class="empty-state-text">No videos watched yet</div>
                         </div>
-                    `).join("")
-                    : `<p class="empty">No videos watched yet</p>`;
-            });
+                    `;
+                    return;
+                }
+
+                container.innerHTML = data.map(v => `
+                    <div class="history-item">
+                        <div class="history-header">
+                            <div class="history-title">📹 ${v.title}</div>
+                        </div>
+                        <div class="history-meta">
+                            ⏱️ ${Math.floor(v.watchedSeconds / 60)} min ${v.watchedSeconds % 60} sec watched
+                        </div>
+                    </div>
+                `).join("");
+            })
+            .catch(err => console.error('Failed to load video history:', err));
     }
 
-    /* -------------------- PRACTICE -------------------- */
-function logPracticeSession() {
-    const skillName = practiceSkillName.value.trim();
-    const skillId = getSkillIdByName(skillName);
+    // ==================== PRACTICE TIMER ====================
+    let timerInterval = null;
+    let elapsedSeconds = 0;
 
-    if (!skillId || !practiceDate.value ||
-        !practiceDuration.value || !practiceEffort.value) {
-        alert("Please select a valid skill and fill all fields");
-        return;
+    function startPracticeTimer() {
+        const topic = document.getElementById("topic").value.trim();
+        if (!topic) {
+            showToast("Please enter a topic before starting practice", "warning");
+            return;
+        }
+
+        if (timerInterval) return;
+
+        timerInterval = setInterval(() => {
+            elapsedSeconds++;
+            updateTimerDisplay();
+        }, 1000);
+
+        toggleTimerButtons(true);
+        showToast(`Practice timer started for: ${topic}`, "success", "Timer Started");
     }
 
-    const payload = {
-        skillId: skillId,
-        practiceDate: practiceDate.value,
-        durationMinutes: Number(practiceDuration.value),
-        effortLevel: practiceEffort.value,
-        notes: practiceNotes.value
-    };
+    function pausePracticeTimer() {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        toggleTimerButtons(false, true);
+    }
 
-    fetch("/api/v1/practice/log", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-    })
-    .then(res => {
-        if (!res.ok) throw new Error();
-        loadPracticeHistory();
-        alert("✅ Practice logged");
-    })
-    .catch(() => alert("❌ Failed"));
-}
+    function stopPracticeTimer() {
+        clearInterval(timerInterval);
+        timerInterval = null;
 
+        const minutes = Math.floor(elapsedSeconds / 60);
+        elapsedSeconds = 0;
+        updateTimerDisplay();
+        toggleTimerButtons(false);
 
+        // Optionally auto-fill the practice duration
+        if (minutes > 0) {
+            document.getElementById("practiceDuration").value = minutes;
+            showToast(`Timer stopped. ${minutes} minutes added to practice log.`, "info", "Timer Stopped");
+        }
+    }
+
+    function updateTimerDisplay() {
+        const mins = String(Math.floor(elapsedSeconds / 60)).padStart(2, "0");
+        const secs = String(elapsedSeconds % 60).padStart(2, "0");
+        document.getElementById("timerDisplay").textContent = `${mins}:${secs}`;
+    }
+
+    function toggleTimerButtons(isRunning, isPaused = false) {
+        document.getElementById("startTimerBtn").disabled = isRunning;
+        document.getElementById("pauseTimerBtn").disabled = !isRunning;
+        document.getElementById("stopTimerBtn").disabled = !isRunning && !isPaused;
+    }
+
+    // ==================== PRACTICE LOGGING ====================
+    function logPracticeSession() {
+        const skillName = document.getElementById("practiceSkillName").value.trim();
+        const skillId = getSkillIdByName(skillName);
+        const date = document.getElementById("practiceDate").value;
+        const duration = document.getElementById("practiceDuration").value;
+        const effort = document.getElementById("practiceEffort").value;
+        const notes = document.getElementById("practiceNotes").value;
+
+        if (!skillId) {
+            showToast("Please select a valid skill from the list", "warning");
+            return;
+        }
+
+        if (!date || !duration || !effort) {
+            showToast("Please fill in all required fields", "warning");
+            return;
+        }
+
+        const payload = {
+            skillId: skillId,
+            practiceDate: date,
+            durationMinutes: Number(duration),
+            effortLevel: effort,
+            notes: notes
+        };
+
+        fetch("/api/v1/practice/log", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        })
+        .then(res => {
+            if (!res.ok) throw new Error('Failed to log practice');
+
+            // Clear form
+            document.getElementById("practiceSkillName").value = "";
+            document.getElementById("practiceDate").valueAsDate = new Date();
+            document.getElementById("practiceDuration").value = "";
+            document.getElementById("practiceEffort").value = "";
+            document.getElementById("practiceNotes").value = "";
+
+            // Reload data
+            loadPracticeHistory();
+            loadUserProgress();
+
+            showToast(`${duration} minutes of ${skillName} logged successfully! 🎉`, "success", "Practice Logged");
+        })
+        .catch(err => {
+            console.error('Failed to log practice:', err);
+            showToast("Failed to log practice session. Please try again.", "error");
+        });
+    }
 
     function loadPracticeHistory() {
         fetch("/api/v1/practice/my")
             .then(res => res.json())
             .then(data => {
-                practiceHistory.innerHTML = data.length
-                    ? data.map(p => `
-                        <div class="history-card">
-                            <strong>${p.skillName}</strong><br>
-                            ${p.practiceDate}<br>
-                            ${p.durationMinutes} mins • ${p.effortLevel}
+                const container = document.getElementById("practiceHistory");
+                document.getElementById("practiceCount").textContent = data.length;
+
+                if (data.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📝</div>
+                            <div class="empty-state-text">No practice sessions logged yet</div>
                         </div>
-                    `).join("")
-                    : `<p class="empty">No practice sessions yet</p>`;
-            });
+                    `;
+                    return;
+                }
+
+                container.innerHTML = data.map(p => `
+                    <div class="history-item">
+                        <div class="history-header">
+                            <div class="history-title">🎯 ${p.skillName}</div>
+                        </div>
+                        <div class="history-meta">
+                            📅 ${new Date(p.practiceDate).toLocaleDateString()} •
+                            ⏱️ ${p.durationMinutes} min
+                        </div>
+                        <span class="history-badge ${p.effortLevel.toLowerCase()}">
+                            ${p.effortLevel} Effort
+                        </span>
+                        ${p.notes ? `<div style="margin-top: 0.5rem; font-size: 13px; color: var(--text-secondary);">${p.notes}</div>` : ''}
+                    </div>
+                `).join("");
+            })
+            .catch(err => console.error('Failed to load practice history:', err));
     }
 
-    function loadSkills() {
-        fetch("/api/v1/skills?userId=1")
-
-            .then(res => res.json())
-            .then(data => {
-                practiceSkillId.innerHTML = `<option value="">Select Skill</option>`;
-                data.forEach(s =>
-                    practiceSkillId.innerHTML += `<option value="${s.id}">${s.name}</option>`
-                );
-            });
-    }
+    // ==================== INITIALIZATION ====================
     window.onload = () => {
-    loadSkills();
-    loadPracticeHistory();
-    loadYoutubeHistory();
-    loadUserProgress();
-};
+        // Load current authenticated user
+        loadCurrentUser();
 
+        // Set today's date as default
+        document.getElementById("practiceDate").valueAsDate = new Date();
+
+        // Load all data
+        loadSkills();
+        loadUserProgress();
+        loadPracticeHistory();
+        loadYoutubeHistory();
+
+        console.log("🔥 Streaker initialized successfully!");
+    };
 </script>
-
 </body>
 </html>
