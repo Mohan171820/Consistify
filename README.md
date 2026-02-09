@@ -1,4 +1,4 @@
-# Streaker – Practice Tracking API
+# Consistify – Practice Tracking API
 
 Skill Decay & Learning Consistency Tracker (Streaker)
 
