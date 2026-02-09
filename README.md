@@ -70,7 +70,7 @@ Consistify is a unique productivity application that goes beyond traditional tim
 ## 🛠️ Tech Stack
 
 - **Backend**: Java, Spring Boot
-- **Database**: [Your database choice]
+- **Database**: postgreSQL
 - **API**: GraphQL
 - **Build Tool**: Maven
 - **Future Integration**: Spring AI
