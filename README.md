@@ -2,11 +2,11 @@
 
 > A productivity tracking platform designed to help users maintain consistent learning and skill development through honest, distraction-free time tracking.
 
-## 🎯 Overview
+##  Overview
 
 Consistify is a unique productivity application that goes beyond traditional time tracking by focusing on authentic learning progress and skill maintenance. The platform prevents fake logging, tracks skill decay, and provides a distraction-free environment for focused learning.
 
-## ✨ Key Features
+##  Key Features
 
 ### 1. **Distraction-Free YouTube Learning**
 - Embed YouTube educational videos directly within the platform
@@ -58,7 +58,7 @@ Consistify is a unique productivity application that goes beyond traditional tim
 - Analyze learning patterns and productivity trends
 - Immutable history ensures data reliability
 
-## 🚀 Upcoming Features
+##  Upcoming Features
 
 ### AI-Powered Insights (Spring AI Integration)
 - Personalized skill recommendations based on decay patterns
@@ -75,7 +75,7 @@ Consistify is a unique productivity application that goes beyond traditional tim
 - **Build Tool**: Maven
 - **Future Integration**: Spring AI
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 Consistify/
@@ -108,7 +108,7 @@ Consistify/
 └── README.md
 ```
 
-## 🎓 How It Works
+## How It Works
 
 ### For YouTube Learning:
 1. Paste a YouTube educational video URL
@@ -132,7 +132,7 @@ Consistify/
 4. Submit your daily log
 5. Entry is locked and cannot be edited
 
-## 🎯 Philosophy
+##  Philosophy
 
 Consistify is built on the principle of **authentic productivity tracking**. We believe that:
 
@@ -171,19 +171,15 @@ cd Consistify
 
 5. Access the application at `http://localhost:8080`
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## 📝 License
+##  Authors
 
-[Your chosen license]
+M.Mohan Murali
 
-## 👥 Authors
-
-[Your name/team]
-
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 Built with the goal of helping developers and learners maintain consistent skill development and honest productivity tracking.
 
