@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="34de18ed-408b-41e2-b5e9-aa10f409f11a" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Streaker.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/copilot.data.migration.agent.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/copilot.data.migration.ask.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/copilot.data.migration.edit.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/.gitattributes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/docs/images/1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/docs/images/2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/docs/images/3.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/docs/images/4.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/docs/images/Endpoints.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/docs/images/endpoint.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Config/BCryptGenerator.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Config/SecurityConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Controller/PracticeController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Controller/SkillController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Controller/UserProgressController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Controller/YoutubeVideoController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Controller/YoutubeWatchTimeController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/DTO/PracticeLogRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/DTO/PracticeResponseDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/DTO/SkillCreateRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/DTO/SkillResponseDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/DTO/UserProgressDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/DTO/WatchTimeRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/DTO/YoutubeHistoryResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/DTO/YoutubeVideoRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/DTO/YoutubeVideoResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Entity/EffortLevel.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Entity/PracticeSession.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Entity/Role.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Entity/Skill.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Entity/User.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Entity/YoutubeDailyWatch.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Entity/YoutubeVideo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Entity/YoutubeWatchHistory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/ExceptionHandler/GlobalExceptionHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/GraphQL/PracticeMutationResolver.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/GraphQL/PracticeQueryResolver.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Mapper/PracticeMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Repo/PracticeSessionRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Repo/SkillRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Repo/UserRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Repo/YoutubeDailyWatchRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Repo/YoutubeHistoryRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Repo/YoutubeVideoRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Service/CustomOAuth2UserService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Service/CustomUserDetailsService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Service/PracticeLoggingService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Service/SkillService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Service/UserProgressService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Service/YoutubeVideoService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/Service/YoutubeWatchTimeService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/StreakerApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/java/com/example/Streaker/util/SecurityUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/resources/application-local.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/resources/application-prod.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/main/resources/graphql/schema.graphqls" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Streaker/src/test/java/com/example/Streaker/StreakerApplicationTests.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_C:/Users/miriy/IdeaProjects/my-java/Consistify" value="39RBxOqSlppX22g02JmLUqmBf6r" />
+      <entry key="_C:/Users/miriy/IdeaProjects/my-java/Streaker" value="37nDVM5svtM8raQbSbfcnaw7fS6" />
+    </persistenceIdMap>
+  </component>
+  <component name="CopilotUserSelectedModel">
+    <selectedModels>
+      <entry key="edit-panel" value="GPT-5 mini" />
+      <entry key="chat-panel" value="GPT-5 mini" />
+      <entry key="agent-panel" value="GPT-5 mini" />
+    </selectedModels>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Record" />
+        <option value="Enum" />
+        <option value="JUnit5 Test Class" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Mohan171820&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Mohan171820/streaker-backend.git&quot;,
+    &quot;accountId&quot;: &quot;9cb9e4d2-9e2a-4dae-8139-a8c63281b214&quot;
+  }
+}</component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="jdkForImporter" value="jbr-21" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="MavenRunner">
+    <option name="jreName" value="jbr-21" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="37nDVM5svtM8raQbSbfcnaw7fS6" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.BCryptGenerator.executor&quot;: &quot;Run&quot;,
+    &quot;Application.BCryptTest.executor&quot;: &quot;Run&quot;,
+    &quot;Application.ConsistifyApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Unnamed.executor&quot;: &quot;Run&quot;,
+    &quot;Application.application.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.SkillRepositoryTest.findByIdAndUserAndActiveTrue_shouldReturnSkill.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Spring Boot.StreakerApplication.executor&quot;: &quot;Run&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
+    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/miriy/IdeaProjects/my-java/Consistify&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.editor&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;GraphQL&quot;
+    ]
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.example.Streaker.Entity" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\miriy\IdeaProjects\my-java\Streaker\Streaker\docs\images" />
+      <recent name="C:\Users\miriy\IdeaProjects\my-java\Streaker\Streaker" />
+    </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="com.example.Streaker.Repo" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.ConsistifyApplication">
+    <configuration name="BCryptGenerator" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.Streaker.Config.BCryptGenerator" />
+      <module name="Streaker" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.Streaker.Config.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BCryptTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.Streaker.Config.BCryptTest" />
+      <module name="Streaker" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.Streaker.Config.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ConsistifyApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.example.Consistify.ConsistifyApplication" />
+      <module name="Consistify" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.Consistify.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SkillRepositoryTest.findByIdAndUserAndActiveTrue_shouldReturnSkill" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Streaker" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.Streaker.Repo.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.example.Streaker.Repo" />
+      <option name="MAIN_CLASS_NAME" value="com.example.Streaker.Repo.SkillRepositoryTest" />
+      <option name="METHOD_NAME" value="findByIdAndUserAndActiveTrue_shouldReturnSkill" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.ConsistifyApplication" />
+      <item itemvalue="Application.BCryptGenerator" />
+      <item itemvalue="Application.BCryptTest" />
+      <item itemvalue="JUnit.SkillRepositoryTest.findByIdAndUserAndActiveTrue_shouldReturnSkill" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.ConsistifyApplication" />
+        <item itemvalue="JUnit.SkillRepositoryTest.findByIdAndUserAndActiveTrue_shouldReturnSkill" />
+        <item itemvalue="Application.BCryptGenerator" />
+        <item itemvalue="Application.BCryptTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.30387.90" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="34de18ed-408b-41e2-b5e9-aa10f409f11a" name="Changes" comment="" />
+      <created>1767529964918</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1767529964918</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
+  </component>
+</project>
