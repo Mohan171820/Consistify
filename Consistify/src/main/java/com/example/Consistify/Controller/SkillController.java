@@ -18,24 +18,26 @@ public class SkillController {
 
     private final SkillService skillService;
 
-    // POST /api/skills
+    // POST /api/v1/skills
     @PostMapping
     public ResponseEntity<String> addSkill(
-            @Valid @RequestBody SkillCreateRequest request) {
-
+            @Valid @RequestBody SkillCreateRequest request
+    ) {
         skillService.createSkill(request);
+
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body("Skill added successfully");
     }
 
+    // GET /api/v1/skills
     @GetMapping
-    public ResponseEntity<List<SkillResponseDTO>> getMySkills(
-            @RequestParam Long userId
-    ) {
-        return ResponseEntity.ok(
-                skillService.getSkillsForUser(userId)
-        );
-    }
+    public ResponseEntity<List<SkillResponseDTO>> getMySkills() {
 
+        List<SkillResponseDTO> skills =
+                skillService.getSkillsForCurrentUser();
+
+        return ResponseEntity.ok(skills);
+    }
 }
+

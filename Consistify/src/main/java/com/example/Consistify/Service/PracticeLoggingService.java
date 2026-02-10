@@ -52,9 +52,9 @@ public class PracticeLoggingService {
                 .orElseThrow(() -> new RuntimeException("User not found in database"));
 
         Skill skill = skillRepository
-                .findByIdAndUserAndActiveTrue(request.getSkillId(), currentUser)
+                .findByIdAndUser(request.getSkillId(), currentUser)
                 .orElseThrow(() ->
-                        new IllegalArgumentException("Skill not found or belongs to another user")
+                        new IllegalArgumentException("Skill not found or does not belong to current user")
                 );
 
         if (request.getDurationMinutes() <= 0) {
@@ -63,7 +63,6 @@ public class PracticeLoggingService {
 
         PracticeSession session = practiceMapper.toEntity(request);
         session.setSkill(skill);
-        session.setUser(currentUser);
 
         skill.setLastPracticedDate(request.getPracticeDate());
 
@@ -89,9 +88,10 @@ public class PracticeLoggingService {
 
         // Fetch user's practice sessions and convert them to response DTOs
         return practiceSessionRepository
-                .findByUser(currentUser)
+                .findBySkill_User(currentUser)
                 .stream()
                 .map(practiceMapper::toResponseDTO)
                 .collect(Collectors.toList());
+
     }
 }

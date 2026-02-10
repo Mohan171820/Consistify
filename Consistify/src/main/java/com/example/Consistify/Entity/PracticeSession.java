@@ -1,9 +1,7 @@
 package com.example.Consistify.Entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -11,9 +9,10 @@ import java.time.LocalDate;
 // Prevents logging the same skill twice on the same date
 @Table(name = "practice_sessions", uniqueConstraints = @UniqueConstraint(columnNames = {"skill_id", "practice_date"})
 )
-@Data // Lombok generates getters, setters, toString, equals, and hashCode
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class PracticeSession {
 
     // Primary key for the practice session
@@ -37,11 +36,6 @@ public class PracticeSession {
     // Stores effort level as a string to avoid invalid enum values
     @Enumerated(EnumType.STRING)
     private EffortLevel effortLevel;
-
-    // Links the practice session to a specific user
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
 
     // Optional notes about the practice session
     private String notes;

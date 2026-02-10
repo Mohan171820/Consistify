@@ -16,6 +16,4 @@ public class SkillCreateRequest {
     @NotNull
     private Integer decayDays;
 
-    @NotNull
-    private Long userId;
 }

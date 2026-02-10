@@ -13,27 +13,22 @@ import java.util.Optional;
 @Repository
 public interface PracticeSessionRepository extends JpaRepository<PracticeSession, Long> {
 
-    // Fetch all practice sessions of a user
-    List<PracticeSession> findByUser(User user);
+    List<PracticeSession> findBySkill_User(User user);
 
-    // Fetch all sessions for a user by skill ID
-    List<PracticeSession> findByUserAndSkillId(User user, Long skillId);
+    List<PracticeSession> findBySkillAndSkill_User(Skill skill, User user);
 
-    // Fetch all sessions for a user by skill name
-    List<PracticeSession> findByUserAndSkillNameIgnoreCase(User user, String skillName);
+    List<PracticeSession> findBySkill_NameIgnoreCaseAndSkill_User(String skillName, User user);
 
-    // Fetch all sessions via skill owner (alternate method)
-    List<PracticeSession> findBySkillUserId(Long userId);
+    List<PracticeSession> findBySkill_User_Id(Long userId);
 
-    // Check duplicate practice entry for a skill on same day
     boolean existsBySkillAndPracticeDate(Skill skill, LocalDate practiceDate);
 
-    // Last practice date for a skill (for decay)
-    Optional<PracticeSession> findTopByUserAndSkillIdOrderByPracticeDateDesc(User user, Long skillId);
+    Optional<PracticeSession>
+    findTopBySkillAndSkill_UserOrderByPracticeDateDesc(Skill skill, User user);
 
-    // Last practice session for user (for progress)
-    Optional<PracticeSession> findTopByUserOrderByPracticeDateDesc(User user);
+    Optional<PracticeSession>
+    findTopBySkill_UserOrderByPracticeDateDesc(User user);
 
-    // Fetch sessions in a date range (analytics / charts)
-    List<PracticeSession> findByUserAndPracticeDateBetween(User user, LocalDate start, LocalDate end);
+    List<PracticeSession>
+    findBySkill_UserAndPracticeDateBetween(User user, LocalDate start, LocalDate end);
 }

@@ -6,8 +6,10 @@ import com.example.Consistify.Entity.Skill;
 import com.example.Consistify.Entity.User;
 import com.example.Consistify.Repo.SkillRepository;
 import com.example.Consistify.Repo.UserRepository;
+import com.example.Consistify.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,43 +22,39 @@ public class SkillService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void createSkill(SkillCreateRequest request) {
+    public void createSkill(
+            SkillCreateRequest request
+    ) {
+        // Resolve logged-in user from security context
+        String email = SecurityUtil.getCurrentUserEmail();
 
-        User user = userRepository.findById(request.getUserId())
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        // Prevent duplicate skill names per user
         boolean exists = skillRepository
-                .existsByUserIdAndNameIgnoreCaseAndActiveTrue(
-                        request.getUserId(),
-                        request.getName()
-                );
-
-        if (exists) {
-            throw new IllegalStateException("Skill already exists for this user");
-        }
-
+                .existsByUserAndNameIgnoreCase(user, request.getName());
 
         if (exists) {
             throw new IllegalStateException("Skill already exists for this user");
         }
 
         Skill skill = new Skill();
-        skill.setId(null); // force INSERT
         skill.setName(request.getName());
         skill.setCategory(request.getCategory());
-        skill.setDecayDays(request.getDecayDays());
-        skill.setActive(true);
         skill.setUser(user);
 
         skillRepository.save(skill);
-
     }
-    public List<SkillResponseDTO> getSkillsForUser(Long userId) {
 
-        User user = userRepository.findById(userId)
+    public List<SkillResponseDTO> getSkillsForCurrentUser() {
+
+        String email = SecurityUtil.getCurrentUserEmail();
+
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return skillRepository.findByUserAndActiveTrue(user)
+        return skillRepository.findByUser(user)
                 .stream()
                 .map(skill -> new SkillResponseDTO(
                         skill.getId(),
@@ -64,5 +62,4 @@ public class SkillService {
                 ))
                 .toList();
     }
-
 }
