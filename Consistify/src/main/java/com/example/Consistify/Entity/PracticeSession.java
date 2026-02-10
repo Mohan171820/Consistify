@@ -25,6 +25,10 @@ public class PracticeSession {
     @JoinColumn(name = "skill_id", nullable = false)
     private Skill skill;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     // Date on which the practice was done
     @Column(nullable = false)
     private LocalDate practiceDate;

@@ -11,87 +11,83 @@ import com.example.Consistify.Repo.SkillRepository;
 import com.example.Consistify.Repo.UserRepository;
 import com.example.Consistify.util.SecurityUtil;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PracticeLoggingService {
 
-    // Repository to store and fetch practice sessions
-    private final PracticeSessionRepository practiceSessionRepository;
-
-    // Repository to validate and fetch skills
+    private final PracticeSessionRepository practiceRepository;
     private final SkillRepository skillRepository;
-
-    // Mapper to convert between DTOs and entities
     private final PracticeMapper practiceMapper;
-
-    // Repository to fetch logged-in user details
     private final UserRepository userRepository;
 
-    // Constructor to inject required dependencies
-    public PracticeLoggingService(PracticeSessionRepository practiceSessionRepository,
-                                  SkillRepository skillRepository,
-                                  PracticeMapper practiceMapper,
-                                  UserRepository userRepository) {
-        this.practiceSessionRepository = practiceSessionRepository;
-        this.skillRepository = skillRepository;
-        this.practiceMapper = practiceMapper;
-        this.userRepository = userRepository;
-    }
-
-    // Logs a new practice session for the currently logged-in user
+    // ---------------- LOG PRACTICE SESSION ----------------
+    // Method to log a new practice session for the current user
     @Transactional
     public void logPractice(PracticeLogRequest request) {
 
+        // Get current users email from security context and fetch user entity
         String email = SecurityUtil.getCurrentUserEmail();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        User currentUser = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found in database"));
-
+        // Fetch the skill being practiced and ensure it belongs to the user
         Skill skill = skillRepository
-                .findByIdAndUser(request.getSkillId(), currentUser)
+                .findByIdAndUser(request.getSkillId(), user)
                 .orElseThrow(() ->
-                        new IllegalArgumentException("Skill not found or does not belong to current user")
+                        new IllegalArgumentException("Skill not found or inactive")
                 );
 
+        // Validate that the practice duration is greater than zero
         if (request.getDurationMinutes() <= 0) {
             throw new IllegalArgumentException("Duration must be greater than zero");
         }
 
+        // Create a new practice session entity from the request DTO, set its skill and user, and save it
         PracticeSession session = practiceMapper.toEntity(request);
         session.setSkill(skill);
+        session.setUser(user);
 
         skill.setLastPracticedDate(request.getPracticeDate());
 
-        // Save both
-        practiceSessionRepository.save(session);
+        practiceRepository.save(session);
         skillRepository.save(skill);
     }
 
-    // Retrieves all practice sessions for the currently logged-in user
-    public List<PracticeResponseDTO> getAllSessions() {
+    // ---------------- GET MY PRACTICES (PAGINATED) ----------------
+    public Page<PracticeResponseDTO> getMyPracticeSessions(Pageable pageable) {
 
-        // Get email of the logged-in user
+        // Get current users email from security context and fetch user entity
         String email = SecurityUtil.getCurrentUserEmail();
-
-        // If no user is logged in, return an empty list
-        if (email == null) {
-            return List.of();
-        }
-
-        // Fetch user details from the database
-        User currentUser = userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Fetch user's practice sessions and convert them to response DTOs
-        return practiceSessionRepository
-                .findBySkill_User(currentUser)
-                .stream()
-                .map(practiceMapper::toResponseDTO)
-                .collect(Collectors.toList());
+        // Fetch paginated practice sessions for the user and map them to response DTOs
+        return practiceRepository
+                .findByUser(user, pageable)
+                .map(practiceMapper::toResponseDTO);
 
     }
+    // ---------------- GET MY PRACTICES FOR GRAPHQL (ALL) ----------------
+    public List<PracticeResponseDTO> getMyPracticeSessionsForGraphQL() {
+
+        // Get current users email from security context and fetch user entity
+        String email = SecurityUtil.getCurrentUserEmail();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Fetch all practice sessions for the user, ordered by practice date descending, and map them to response DTOs
+        return practiceRepository
+                .findTopBySkill_UserOrderByPracticeDateDesc(user)
+                .stream()
+                .map(practiceMapper::toResponseDTO)
+                .toList();
+    }
+
 }

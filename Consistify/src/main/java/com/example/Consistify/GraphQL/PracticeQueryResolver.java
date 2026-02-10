@@ -16,8 +16,9 @@ public class PracticeQueryResolver {
         this.practiceLoggingService = practiceLoggingService;
     }
 
+    // This method will be called when the "myPracticeSessions" query is executed in GraphQL
     @QueryMapping
     public List<PracticeResponseDTO> myPracticeSessions() {
-        return practiceLoggingService.getAllSessions();
+        return practiceLoggingService.getMyPracticeSessionsForGraphQL();
     }
 }

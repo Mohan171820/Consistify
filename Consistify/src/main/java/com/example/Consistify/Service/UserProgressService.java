@@ -35,10 +35,12 @@ public class UserProgressService {
 
         int totalSkills = skillRepository.countByUser(user);
 
-        int totalMinutes = practiceRepository.findBySkill_User(user)
+        int totalMinutes = practiceRepository.findAllByUser(user)
                 .stream()
                 .mapToInt(PracticeSession::getDurationMinutes)
                 .sum();
+
+
 
         LocalDate lastPracticeDate = practiceRepository
                 .findTopBySkill_UserOrderByPracticeDateDesc(user)

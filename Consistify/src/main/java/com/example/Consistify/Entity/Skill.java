@@ -7,9 +7,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+  // Lombok is implemented instead of getters and setters
 @Entity
-@Table(name="skills")
-@Data     // Lombok is implemented instead of getters and setters
+@Table(name = "skills")
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Skill {
@@ -18,18 +19,23 @@ public class Skill {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Here we used nullable to make the user not to enter the accurate data and not to keep empty
     @Column(nullable = false)
     private String name;
 
-    //Here the category is like ex: java,DSA,JS...etc. whatever you want do
     @Column(nullable = false)
     private String category;
+
+    @Column(nullable = false)
+    private boolean active = true;
+
+    private LocalDate lastPracticedDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    private LocalDate lastPracticedDate;
-
+    // Explicit getter (safe + clear)
+    public boolean isActive() {
+        return active;
+    }
 }

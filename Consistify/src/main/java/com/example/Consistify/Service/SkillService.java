@@ -1,6 +1,7 @@
 package com.example.Consistify.Service;
 
 import com.example.Consistify.DTO.SkillCreateRequest;
+import com.example.Consistify.DTO.SkillHealthDTO;
 import com.example.Consistify.DTO.SkillResponseDTO;
 import com.example.Consistify.Entity.Skill;
 import com.example.Consistify.Entity.User;
@@ -9,6 +10,8 @@ import com.example.Consistify.Repo.UserRepository;
 import com.example.Consistify.util.SecurityUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,7 @@ public class SkillService {
 
     private final SkillRepository skillRepository;
     private final UserRepository userRepository;
+    private final SkillHealthCalculator healthCalculator;
 
     @Transactional
     public void createSkill(
@@ -47,7 +51,25 @@ public class SkillService {
         skillRepository.save(skill);
     }
 
-    public List<SkillResponseDTO> getSkillsForCurrentUser() {
+
+    public Page<SkillResponseDTO> getSkillsForCurrentUser(Pageable pageable) {
+
+        String email = SecurityUtil.getCurrentUserEmail();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return skillRepository
+                .findByUser(user, pageable)
+                .map(skill -> new SkillResponseDTO(
+                        skill.getId(),
+                        skill.getName(),
+                        skill.getCategory(),
+                        skill.isActive()
+                ));
+
+
+        }
+    public List<SkillHealthDTO> getSkillHealthForCurrentUser() {
 
         String email = SecurityUtil.getCurrentUserEmail();
 
@@ -56,10 +78,8 @@ public class SkillService {
 
         return skillRepository.findByUser(user)
                 .stream()
-                .map(skill -> new SkillResponseDTO(
-                        skill.getId(),
-                        skill.getName()
-                ))
+                .map(skill -> healthCalculator.calculate(skill))
                 .toList();
     }
+
 }

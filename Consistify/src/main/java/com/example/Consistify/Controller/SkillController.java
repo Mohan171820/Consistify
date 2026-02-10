@@ -5,6 +5,8 @@ import com.example.Consistify.DTO.SkillResponseDTO;
 import com.example.Consistify.Service.SkillService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+// Base URL for all skill-related endpoints
 @RequestMapping("/api/v1/skills")
 @RequiredArgsConstructor
 public class SkillController {
@@ -32,12 +35,12 @@ public class SkillController {
 
     // GET /api/v1/skills
     @GetMapping
-    public ResponseEntity<List<SkillResponseDTO>> getMySkills() {
-
-        List<SkillResponseDTO> skills =
-                skillService.getSkillsForCurrentUser();
-
-        return ResponseEntity.ok(skills);
+    public ResponseEntity<Page<SkillResponseDTO>> getMySkills(
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok(
+                skillService.getSkillsForCurrentUser(pageable)
+        );
     }
 }
 
