@@ -30,33 +30,30 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
+                .cors(cors -> {})
                 .csrf(csrf -> csrf.ignoringRequestMatchers(
                         "/api/**",
                         "/graphql/**"
                 ))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/api/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/login/**",
-                                "/graphiql/**",   // All these are the endpoints
-                                "/graphql/**",
-                                "/_graphiql/**",
-                                "/vendor/**",
-                                "/favicon.ico",
-                                "/oauth2/**"
+                                "/oauth2/**",
+                                "/favicon.ico"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
+
                 .formLogin(form -> form
-                        .defaultSuccessUrl("/swagger-ui/index.html", true)
+                        .defaultSuccessUrl("http://localhost:5500/index.html", true)
                 )
                 .oauth2Login(oauth -> oauth
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService)
                         )
-                        .defaultSuccessUrl("/swagger-ui/index.html", true)
+                        .defaultSuccessUrl("http://localhost:5500/index.html", true)
                 )
 
 
