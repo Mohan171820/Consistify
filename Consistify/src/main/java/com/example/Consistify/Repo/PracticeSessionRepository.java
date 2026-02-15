@@ -48,4 +48,7 @@ public interface PracticeSessionRepository extends JpaRepository<PracticeSession
     // Find all practice sessions for a specific user
     List<PracticeSession> findAllByUser(User user);
 
+
+
+
 }

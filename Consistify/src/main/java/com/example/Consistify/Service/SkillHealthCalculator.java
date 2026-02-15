@@ -33,7 +33,7 @@ public class SkillHealthCalculator {
 
         // If there are no practice sessions, the skill is considered decayed with maximum inactivity
         if (sessions.isEmpty()) {
-            dto.setDaysInactive(Integer.MAX_VALUE);
+            dto.setDaysInactive(null);
             dto.setCurrentStreak(0);
             dto.setStatus(SkillStatus.DECAYED);
             return dto;
@@ -56,29 +56,40 @@ public class SkillHealthCalculator {
         return dto;
     }
 
-    // Helper method to calculate the current streak of consecutive practice days
     private int calculateStreak(List<PracticeSession> sessions) {
 
         int streak = 0;
-        LocalDate expectedDate = LocalDate.now();
 
-        // Loop through the practice sessions in descending order and check if they are on consecutive days
-        for (PracticeSession session : sessions) {
-            LocalDate practiceDate = session.getPracticeDate();
+        List<LocalDate> uniqueDates = sessions.stream()
+                .map(PracticeSession::getPracticeDate)
+                .distinct()
+                .toList();
 
-            // Check if the practice date is either today or yesterday (to allow for a one-day gap in the streak)
-            if (practiceDate.equals(expectedDate) ||
-                    practiceDate.equals(expectedDate.minusDays(1))) {
+        LocalDate today = LocalDate.now();
+        LocalDate previousDate = null;
 
-                streak++;
-                expectedDate = practiceDate.minusDays(1);
+        for (LocalDate practiceDate : uniqueDates) {
+
+            if (previousDate == null) {
+                if (practiceDate.equals(today) || practiceDate.equals(today.minusDays(1))) {
+                    streak = 1;
+                    previousDate = practiceDate;
+                } else {
+                    break;
+                }
             } else {
-                break;
+                if (practiceDate.equals(previousDate.minusDays(1))) {
+                    streak++;
+                    previousDate = practiceDate;
+                } else {
+                    break;
+                }
             }
         }
 
         return streak;
     }
+
 
     // Helper method to determine the skill status based on the number of days inactive
     private SkillStatus determineStatus(int daysInactive) {

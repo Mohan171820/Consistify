@@ -10,7 +10,7 @@ public class SkillHealthDTO {
     private String skillName;
 
     private int currentStreak;
-    private int daysInactive;
+    private Integer daysInactive;
     private SkillStatus status;
 
     public Long getSkillId() {
@@ -38,11 +38,11 @@ public class SkillHealthDTO {
         this.currentStreak = currentStreak;
     }
 
-    public int getDaysInactive() {
+    public Integer getDaysInactive() {
         return daysInactive;
     }
 
-    public void setDaysInactive(int daysInactive) {
+    public void setDaysInactive(Integer daysInactive) {
         this.daysInactive = daysInactive;
     }
 

@@ -48,6 +48,12 @@ public class PracticeLoggingService {
         if (request.getDurationMinutes() <= 0) {
             throw new IllegalArgumentException("Duration must be greater than zero");
         }
+        boolean exists = practiceRepository
+                .existsBySkillAndPracticeDate(skill, request.getPracticeDate());
+
+        if (exists) {
+            throw new IllegalStateException("You already logged this skill today.");
+        }
 
         // Create a new practice session entity from the request DTO, set its skill and user, and save it
         PracticeSession session = practiceMapper.toEntity(request);

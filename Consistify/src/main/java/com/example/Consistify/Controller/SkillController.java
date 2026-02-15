@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 // Base URL for all skill-related endpoints
@@ -23,14 +24,14 @@ public class SkillController {
 
     // POST /api/v1/skills
     @PostMapping
-    public ResponseEntity<String> addSkill(
+    public ResponseEntity<Map<String, String>> addSkill(
             @Valid @RequestBody SkillCreateRequest request
     ) {
         skillService.createSkill(request);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body("Skill added successfully");
+                .body(Map.of("message", "Skill added successfully"));
     }
 
     // GET /api/v1/skills

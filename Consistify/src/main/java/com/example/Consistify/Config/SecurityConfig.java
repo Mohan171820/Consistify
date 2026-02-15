@@ -37,7 +37,7 @@ public class SecurityConfig {
                 ))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/swagger-ui/**",
+                                "http://localhost:5500/**",
                                 "/v3/api-docs/**",
                                 "/login/**",
                                 "/oauth2/**",
@@ -47,13 +47,13 @@ public class SecurityConfig {
                 )
 
                 .formLogin(form -> form
-                        .defaultSuccessUrl("http://localhost:5500/index.html", true)
+                        .defaultSuccessUrl("http://localhost:5500",  true)
                 )
                 .oauth2Login(oauth -> oauth
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService)
                         )
-                        .defaultSuccessUrl("http://localhost:5500/index.html", true)
+                        .defaultSuccessUrl("http://localhost:5500",  true)
                 )
 
 
