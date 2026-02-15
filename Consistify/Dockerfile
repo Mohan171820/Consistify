@@ -1,17 +1,16 @@
-# Use official OpenJDK image
-FROM eclipse-temurin:17-jdk
+FROM eclipse-temurin:17-jdk-alpine
 
-# Set working directory
 WORKDIR /app
 
-# Copy project files
+# Copy everything first
 COPY . .
+
+# Give execute permission to mvnw
+RUN chmod +x mvnw
 
 # Build the application
 RUN ./mvnw clean package -DskipTests
 
-# Expose port (Render provides PORT env variable)
 EXPOSE 8080
 
-# Run the jar
-CMD ["sh", "-c", "java -jar target/*.jar --server.port=$PORT"]
+CMD ["java", "-Dspring.profiles.active=prod", "-jar", "target/Consistify-0.0.1-SNAPSHOT.jar"]
