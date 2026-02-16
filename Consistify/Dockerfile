@@ -12,6 +12,6 @@ RUN chmod +x mvnw
 # Build the application
 RUN ./mvnw clean package -DskipTests
 
-EXPOSE 8080
+EXPOSE 10000
 
 CMD ["java", "-Dspring.profiles.active=prod", "-jar", "target/Consistify-0.0.1-SNAPSHOT.jar"]
