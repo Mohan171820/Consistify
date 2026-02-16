@@ -37,18 +37,7 @@ public class SecurityConfig {
                         "/graphql/**"
                 ))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/",
-                                "/actuator/**",
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/login/**",
-                                "/oauth2/**",
-                                "/oauth2/authorization/google",
-                                "/favicon.ico"
-                        ).permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth -> oauth
                         .userInfoEndpoint(userInfo -> userInfo
