@@ -30,46 +30,41 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                .cors(cors -> {})
+                .cors(cors -> {
+                })
                 .csrf(csrf -> csrf.ignoringRequestMatchers(
                         "/api/**",
                         "/graphql/**"
                 ))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "http://localhost:5500/**",
+                                "/",
+                                "/actuator/**",
                                 "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
                                 "/login/**",
                                 "/oauth2/**",
+                                "/oauth2/authorization/google",
                                 "/favicon.ico"
                         ).permitAll()
                         .anyRequest().authenticated()
-                )
-
-                .formLogin(form -> form
-                        .defaultSuccessUrl("http://localhost:5500",  true)
                 )
                 .oauth2Login(oauth -> oauth
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService)
                         )
-                        .defaultSuccessUrl("http://localhost:5500",  true)
+                        .defaultSuccessUrl("/", true)
                 )
-
-
-        // Configure logout behavior
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/") // Redirect after logout
+                        .logoutSuccessUrl("/")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                 )
-
-                // Session management configuration
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 );
 
-        // Build and return the security filter chain
         return http.build();
     }
 }
