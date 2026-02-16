@@ -1,17 +1,14 @@
-FROM eclipse-temurin:21-jdk-alpine
-
-
+# -------- BUILD STAGE --------
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
-
-# Copy everything first
 COPY . .
+RUN mvn clean package -DskipTests
 
-# Give execute permission to mvnw
-RUN chmod +x mvnw
-
-# Build the application
-RUN ./mvnw clean package -DskipTests
+# -------- RUN STAGE --------
+FROM eclipse-temurin:21-jdk-alpine
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 10000
 
-CMD ["java", "-Dspring.profiles.active=prod", "-jar", "target/Consistify-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["sh", "-c", "java -Dserver.port=$PORT -Dserver.address=0.0.0.0 -jar app.jar"]
