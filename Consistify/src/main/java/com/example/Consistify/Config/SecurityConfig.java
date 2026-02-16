@@ -30,30 +30,46 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                .cors(cors -> {
-                })
+                .cors(cors -> {})
                 .csrf(csrf -> csrf.ignoringRequestMatchers(
                         "/api/**",
                         "/graphql/**"
                 ))
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
+                        .requestMatchers(
+                                "http://localhost:5500/**",
+                                "/v3/api-docs/**",
+                                "/login/**",
+                                "/oauth2/**",
+                                "/favicon.ico"
+                        ).permitAll()
+                        .anyRequest().authenticated()
+                )
+
+                .formLogin(form -> form
+                        .defaultSuccessUrl("http://localhost:5500",  true)
                 )
                 .oauth2Login(oauth -> oauth
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService)
                         )
-                        .defaultSuccessUrl("/", true)
+                        .defaultSuccessUrl("http://localhost:5500",  true)
                 )
+
+
+        // Configure logout behavior
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/")
+                        .logoutSuccessUrl("/") // Redirect after logout
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                 )
+
+                // Session management configuration
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 );
 
+        // Build and return the security filter chain
         return http.build();
     }
 }
