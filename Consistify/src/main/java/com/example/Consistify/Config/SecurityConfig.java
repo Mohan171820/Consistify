@@ -25,9 +25,8 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
 
     // Pull frontend URL from environment variable
-    @Value("${app.frontend.url}")
+    @Value("${app.frontend.url:http://localhost:5500}")
     private String frontendUrl;
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
