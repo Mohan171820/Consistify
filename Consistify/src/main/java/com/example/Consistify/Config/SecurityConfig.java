@@ -25,7 +25,7 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
 
     // Pull frontend URL from environment variable
-    @Value("${app.frontend.url:http://localhost:5500}")
+    @Value("${app.frontend.url:https://consistify-six.vercel.app/}")
     private String frontendUrl;
     @Bean
     public PasswordEncoder passwordEncoder() {
