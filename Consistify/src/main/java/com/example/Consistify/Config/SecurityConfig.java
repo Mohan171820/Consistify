@@ -2,6 +2,7 @@ package com.example.Consistify.Config;
 
 import com.example.Consistify.Service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,66 +11,83 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor // Automatically injects required dependencies
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-    // Custom OAuth2 service to map Google user to application user
     private final CustomOAuth2UserService customOAuth2UserService;
 
-    // Bean to encrypt and verify user passwords using BCrypt
+    // Pull frontend URL from environment variable
+    @Value("${app.frontend.url}")
+    private String frontendUrl;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // Main Spring Security configuration
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                .cors(cors -> {})
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.ignoringRequestMatchers(
                         "/api/**",
-                        "/graphql/**"
+                        "/graphql/**",
+                        "/actuator/**"
                 ))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "http://localhost:5500/**",
+                                // Public endpoints — no login needed
+                                "/actuator/health",
+                                "/actuator/info",
+                                "/graphql",
+                                "/graphiql",
                                 "/v3/api-docs/**",
                                 "/login/**",
                                 "/oauth2/**",
-                                "/favicon.ico"
+                                "/favicon.ico",
+                                "/api/**"
                         ).permitAll()
                         .anyRequest().authenticated()
-                )
-
-                .formLogin(form -> form
-                        .defaultSuccessUrl("http://localhost:5500",  true)
                 )
                 .oauth2Login(oauth -> oauth
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService)
                         )
-                        .defaultSuccessUrl("http://localhost:5500",  true)
+                        // Redirect to frontend URL from environment variable
+                        .defaultSuccessUrl(frontendUrl, true)
                 )
-
-
-        // Configure logout behavior
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/") // Redirect after logout
+                        .logoutSuccessUrl("/")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                 )
-
-                // Session management configuration
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 );
 
-        // Build and return the security filter chain
         return http.build();
+    }
+
+    // Proper CORS config that reads frontend URL from environment
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of(frontendUrl));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 }
