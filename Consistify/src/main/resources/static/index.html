@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Consistify | Learn Consistently</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <script>
+        const user = localStorage.getItem('user');
+        if (!user) {
+          window.location.href = '/login.html';
+        }
+    </script>
+</head>
+<body>
+<div class="aurora aurora-1"></div>
+<div class="aurora aurora-2"></div>
+
+<header class="topbar">
+    <div class="brand-wrap">
+        <div class="logo">C</div>
+        <div>
+            <p class="brand">Consistify</p>
+            <p class="tagline">Track honestly. Learn consistently.</p>
+        </div>
+    </div>
+
+    <nav class="top-actions">
+        <span id="userName" class="muted"></span>
+        <a class="ghost-btn link-btn" href="settings.html">Account</a>
+    </nav>
+</header>
+
+
+<main class="layout">
+    <aside class="sidebar card">
+        <p class="section-title">Navigation</p>
+        <a class="menu-item menu-link active" href="index.html">Dashboard</a>
+        <a class="menu-item menu-link" href="practice-log.html">Practice Log</a>
+        <a class="menu-item menu-link" href="skill-health.html">Skill Health</a>
+        <a class="menu-item menu-link" href="youtube-focus.html">YouTube Focus</a>
+        <a class="menu-item menu-link" href="history.html">History</a>
+        <a class="menu-item menu-link" href="settings.html">Settings</a>
+        <a class="menu-item menu-link" href="skills.html">Skills</a>
+
+
+        <div class="divider"></div>
+
+        <p class="section-title">This week</p>
+        <div class="mini-metric"><span>Practice time</span><strong id="weekMinutes">0 min</strong></div>
+        <div class="mini-metric"><span>Current streak</span><strong id="weekStreak">0 days</strong></div>
+    </aside>
+
+    <section class="content">
+        <section class="hero card">
+            <div>
+                <p class="eyebrow">WELCOME BACK, LEARNER</p>
+                <h1>Build streaks that survive distractions.</h1>
+                <p class="subtext">Your learning cockpit combines YouTube focus tracking, coding practice, and skill-decay insights in one place.</p>
+            </div>
+            <div class="ring-wrap">
+                <svg viewBox="0 0 120 120" class="progress-ring">
+                    <circle cx="60" cy="60" r="50" class="bg"></circle>
+                    <circle cx="60" cy="60" r="50" class="meter" id="consistencyRing"></circle>
+                </svg>
+                <div class="ring-label"><strong id="consistencyScore">0%</strong><span>Consistency</span></div>
+            </div>
+        </section>
+
+        <section class="stats-grid">
+            <article class="card stat"><p>Total Skills</p><h2 id="totalSkills">0</h2></article>
+            <article class="card stat"><p>Active Skills</p><h2 id="activeSkills">0</h2></article>
+            <article class="card stat"><p>At Risk</p><h2 id="atRiskSkills">0</h2></article>
+            <article class="card stat"><p>Decayed</p><h2 id="decayedSkills">0</h2></article>
+        </section>
+
+        <section class="card split">
+            <div>
+                <h3>Skill Health Radar</h3>
+                <p class="muted">Prioritize skills closest to decay.</p>
+                <div id="skillList" class="skill-list"></div>
+            </div>
+            <div>
+                <h3>Quick Practice Log</h3>
+                <form id="practiceForm" class="practice-form">
+                    <label>Skill <select id="skillSelect" required></select></label>
+                    <label>Duration (minutes) <input id="durationInput" type="number" min="1" value="45" required /></label>
+                    <label>Effort Level <select id="effortInput"><option>LOW</option><option selected>MEDIUM</option><option>HIGH</option></select></label>
+                    <label>Notes <textarea id="notesInput" rows="3" placeholder="What did you focus on today?"></textarea></label>
+                    <button class="primary-btn" type="submit">Save Practice Session</button>
+                </form>
+                <p id="formStatus" class="status" aria-live="polite"></p>
+            </div>
+        </section>
+
+        <section class="card">
+            <h3>YouTube Focus Sessions</h3>
+            <p class="muted">Distraction-free educational video tracking.</p>
+            <div class="video-grid" id="videoGrid"></div>
+        </section>
+    </section>
+</main>
+
+<script src="api-client.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

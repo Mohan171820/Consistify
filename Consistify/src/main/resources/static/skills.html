@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Consistify | Skills</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+<header class="topbar">
+    <div class="brand-wrap">
+        <div class="logo">C</div>
+        <div>
+            <p class="brand">Consistify</p>
+            <p class="tagline">Track honestly. Learn consistently.</p>
+        </div>
+    </div>
+    <nav class="top-actions">
+        <span id="userName" class="muted"></span>
+        <a class="ghost-btn link-btn" href="settings.html">Account</a>
+    </nav>
+</header>
+
+<main class="layout">
+    <aside class="sidebar card">
+        <p class="section-title">Navigation</p>
+        <a class="menu-item menu-link" href="index.html">Dashboard</a>
+        <a class="menu-item menu-link active" href="skills.html">Skills</a>
+        <a class="menu-item menu-link" href="practice-log.html">Practice Log</a>
+        <a class="menu-item menu-link" href="skill-health.html">Skill Health</a>
+        <a class="menu-item menu-link" href="youtube-focus.html">YouTube Focus</a>
+        <a class="menu-item menu-link" href="history.html">History</a>
+        <a class="menu-item menu-link" href="settings.html">Settings</a>
+    </aside>
+
+    <section class="content">
+
+        <section class="card page-head">
+            <h1>Skills</h1>
+            <p class="muted">Create and manage your learning skills.</p>
+        </section>
+
+        <section class="card split">
+            <div>
+                <h3>Add New Skill</h3>
+
+                <form id="skillForm" class="practice-form">
+                    <label>
+                        Skill Name
+                        <input id="skillName" type="text" required />
+                    </label>
+
+                    <label>
+                        Category
+                        <input id="skillCategory" type="text" required />
+                    </label>
+                    <label>
+                        Decay Days
+                        <input id="decayDays" type="number" min="1" value="7" required />
+                    </label>
+
+                    <button class="primary-btn" type="submit">
+                        Add Skill
+                    </button>
+                </form>
+
+                <p id="skillStatus" class="status"></p>
+            </div>
+
+            <div>
+                <h3>Your Skills</h3>
+                <div id="skillsList" class="skill-list"></div>
+            </div>
+        </section>
+
+    </section>
+</main>
+
+<script src="api-client.js"></script>
+<script src="skills.js"></script>
+</body>
+
+</html>

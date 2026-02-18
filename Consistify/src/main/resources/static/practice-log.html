@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Consistify | Practice Log</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="aurora aurora-1"></div><div class="aurora aurora-2"></div>
+<header class="topbar">
+    <div class="brand-wrap"><div class="logo">C</div><div><p class="brand">Consistify</p><p class="tagline">Track honestly. Learn consistently.</p></div></div>
+    <nav class="top-actions"><span id="userName" class="muted"></span><a class="ghost-btn link-btn" href="settings.html">Settings</a></nav>
+</header>
+
+<main class="layout">
+    <aside class="sidebar card">
+        <p class="section-title">Navigation</p>
+        <a class="menu-item menu-link" href="index.html">Dashboard</a>
+        <a class="menu-item menu-link active" href="practice-log.html">Practice Log</a>
+        <a class="menu-item menu-link" href="skill-health.html">Skill Health</a>
+        <a class="menu-item menu-link" href="youtube-focus.html">YouTube Focus</a>
+        <a class="menu-item menu-link" href="history.html">History</a>
+        <a class="menu-item menu-link" href="settings.html">Settings</a>
+    </aside>
+
+    <section class="content">
+        <section class="card page-head"><h1>Practice Log</h1><p class="muted">Log focused sessions and keep your streak alive.</p></section>
+
+        <section class="card split">
+            <div>
+                <h3>Quick Log Entry</h3>
+                <form id="practicePageForm" class="practice-form">
+                    <label>Skill <select id="skillSelectPage" required></select></label>
+                    <label>Date <input id="practiceDate" type="date" required /></label>
+                    <label>Duration (minutes) <input id="durationPage" type="number" min="1" value="60" required /></label>
+                    <label>Effort <select id="effortPage"><option>Low</option><option selected>Medium</option><option>High</option></select></label>
+                    <label>Notes <textarea id="notesPage" rows="3" placeholder="What did you practice?"></textarea></label>
+                    <button class="primary-btn" type="submit">Save Session</button>
+                </form>
+                <p id="practiceStatus" class="status" aria-live="polite"></p>
+            </div>
+            <div>
+                <h3>Daily Rule Reminder</h3>
+                <article class="info-tile">
+                    <p>✅ One entry per skill per day is enforced to preserve accountability and authentic progress.</p>
+                    <p>✅ Keep notes concise and action-oriented so you can review your patterns later.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="card">
+            <h3>Recent Practice Sessions</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Date</th><th>Skill</th><th>Duration</th><th>Effort</th><th>Notes</th></tr></thead>
+                    <tbody id="practiceRows"></tbody>
+                </table>
+            </div>
+        </section>
+    </section>
+</main>
+
+<script src="api-client.js"></script>
+<script src="practice-log.js"></script>
+</body>
+</html>

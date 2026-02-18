@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Consistify | Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" href="login.css" />
+</head>
+<body>
+<div class="halo halo-left"></div>
+<div class="halo halo-right"></div>
+
+<main class="login-shell">
+    <section class="brand-panel">
+        <a href="index.html" class="brand-link" aria-label="Go to dashboard">
+            <span class="logo">C</span>
+            <div>
+                <p class="brand">Consistify</p>
+                <p class="tagline">Track honestly. Learn consistently.</p>
+            </div>
+        </a>
+
+        <h1>Welcome back to your learning streak.</h1>
+        <p>
+            Sign in to continue your distraction-free practice sessions, monitor skill health,
+            and keep your consistency score rising every day.
+        </p>
+
+        <ul class="highlights">
+            <li>Secure session-based authentication</li>
+            <li>One-click Google login support</li>
+            <li>Instant redirect to your dashboard</li>
+        </ul>
+    </section>
+
+    <section class="auth-panel">
+        <header>
+            <p class="eyebrow">AUTHENTICATION</p>
+            <h2>Sign in to Consistify</h2>
+            <p class="muted">Use your account credentials or continue with Google.</p>
+        </header>
+
+        <form id="loginForm" class="login-form" novalidate>
+            <label>
+                Email
+                <input id="email" name="username" type="email" autocomplete="username" required />
+            </label>
+
+            <label>
+                Password
+                <input
+                        id="password"
+                        name="password"
+                        type="password"
+                        autocomplete="current-password"
+                        minlength="8"
+                        required
+                />
+            </label>
+
+            <div class="row">
+                <label class="remember">
+                    <input id="remember" name="remember-me" type="checkbox" />
+                    <span>Remember me</span>
+                </label>
+                <a class="inline-link" href="/login">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="primary-btn" id="submitBtn">Sign In</button>
+            <p id="status" class="status" aria-live="polite"></p>
+        </form>
+
+        <div class="divider"><span>or continue with</span></div>
+
+        <button id="googleLogin" class="google-btn" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                        fill="#EA4335"
+                        d="M12 10.2v3.9h5.4c-.2 1.3-1.5 3.9-5.4 3.9-3.2 0-5.9-2.7-5.9-6s2.6-6 5.9-6c1.8 0 3.1.8 3.8 1.5l2.6-2.5C16.7 3.7 14.5 3 12 3 7 3 3 7 3 12s4 9 9 9c5.2 0 8.6-3.6 8.6-8.7 0-.6-.1-1.1-.1-1.5H12z"
+                />
+                <path
+                        fill="#34A853"
+                        d="M3 7.3l3.2 2.4C7 7.7 9.3 6 12 6c1.8 0 3.1.8 3.8 1.5l2.6-2.5C16.7 3.7 14.5 3 12 3 8.5 3 5.4 4.9 3.8 7.7L3 7.3z"
+                />
+                <path
+                        fill="#4A90E2"
+                        d="M12 21c2.4 0 4.5-.8 6-2.3l-2.8-2.3c-.8.6-1.8 1-3.2 1-3.8 0-5.2-2.6-5.4-3.9L3.3 16C4.8 19 8.1 21 12 21z"
+                />
+                <path
+                        fill="#FBBC05"
+                        d="M6.6 14.1c-.1-.4-.2-.8-.2-1.1 0-.4.1-.8.2-1.1L3.4 9.5C3.1 10.3 3 11.1 3 12s.1 1.7.4 2.5l3.2-2.4z"
+                />
+            </svg>
+            Sign in with Google
+        </button>
+
+        <p class="footnote">
+            By signing in you agree to our Terms and Privacy Policy.
+        </p>
+    </section>
+</main>
+
+<script src="login.js"></script>
+</body>
+</html>

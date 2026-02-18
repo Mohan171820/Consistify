@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Consistify | Skill Health</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="aurora aurora-1"></div><div class="aurora aurora-2"></div>
+<header class="topbar">
+    <div class="brand-wrap"><div class="logo">C</div><div><p class="brand">Consistify</p><p class="tagline">Track honestly. Learn consistently.</p></div></div>
+    <nav class="top-actions"><span id="userName" class="muted"></span><a class="ghost-btn link-btn" href="index.html">Dashboard</a></nav>
+</header>
+
+<main class="layout">
+    <aside class="sidebar card">
+        <p class="section-title">Navigation</p>
+        <a class="menu-item menu-link" href="index.html">Dashboard</a>
+        <a class="menu-item menu-link" href="practice-log.html">Practice Log</a>
+        <a class="menu-item menu-link active" href="skill-health.html">Skill Health</a>
+        <a class="menu-item menu-link" href="youtube-focus.html">YouTube Focus</a>
+        <a class="menu-item menu-link" href="history.html">History</a>
+        <a class="menu-item menu-link" href="settings.html">Settings</a>
+    </aside>
+    <section class="content">
+        <section class="card page-head"><h1>Skill Health</h1><p class="muted">Monitor inactivity, streak continuity, and risk zones.</p></section>
+        <section class="stats-grid">
+            <article class="card stat"><p>Healthy</p><h2 id="healthyCount">0</h2></article>
+            <article class="card stat"><p>At Risk</p><h2 id="riskCount">0</h2></article>
+            <article class="card stat"><p>Decayed</p><h2 id="decayedCount">0</h2></article>
+            <article class="card stat"><p>Avg Inactive Days</p><h2 id="avgInactive">0.0</h2></article>
+        </section>
+        <section class="card"><h3>Health Breakdown</h3><div id="healthList" class="skill-list"></div></section>
+    </section>
+</main>
+
+<script src="api-client.js"></script>
+<script src="skill-health.js"></script>
+</body>
+</html>

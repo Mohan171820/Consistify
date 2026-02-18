@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Consistify | YouTube Focus</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- YouTube Iframe API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+</head>
+
+<body>
+<div class="aurora aurora-1"></div>
+<div class="aurora aurora-2"></div>
+
+<header class="topbar">
+    <div class="brand-wrap">
+        <div class="logo">C</div>
+        <div>
+            <p class="brand">Consistify</p>
+            <p class="tagline">Track honestly. Learn consistently.</p>
+        </div>
+    </div>
+    <nav class="top-actions">
+        <span id="userName" class="muted"></span>
+        <a class="ghost-btn link-btn" href="index.html">Dashboard</a>
+    </nav>
+</header>
+
+<main class="layout">
+    <aside class="sidebar card">
+        <p class="section-title">Navigation</p>
+        <a class="menu-item menu-link" href="index.html">Dashboard</a>
+        <a class="menu-item menu-link active" href="youtube-focus.html">YouTube Focus</a>
+    </aside>
+
+    <section class="content">
+
+        <section class="card page-head">
+            <h1>YouTube Focus</h1>
+            <p class="muted">Watch inside Consistify. Track real focus time automatically.</p>
+        </section>
+
+        <section class="card split">
+            <div>
+                <h3>Watch & Track</h3>
+
+                <form id="youtubeForm" class="practice-form">
+                    <label>
+                        YouTube URL
+                        <input id="youtubeUrl" type="url" placeholder="https://youtube.com/watch?v=..." required />
+                    </label>
+
+                    <label>
+                        Title
+                        <input id="youtubeTitle" type="text" placeholder="Video title" />
+                    </label>
+
+                    <button class="primary-btn" type="submit">
+                        Load Video
+                    </button>
+                </form>
+
+                <div id="playerContainer" style="margin-top:20px;">
+                    <div id="player"></div>
+                </div>
+
+                <button id="saveWatchTime" class="primary-btn" style="margin-top:15px;">
+                    Save Focus Time
+                </button>
+
+                <p id="youtubeStatus" class="status" aria-live="polite"></p>
+            </div>
+
+            <div>
+                <h3>Total Focus Time</h3>
+                <article class="info-tile">
+                    <p class="big-number" id="focusToday">0m</p>
+                    <p>Calculated from tracked video history.</p>
+                </article>
+            </div>
+
+        </section>
+
+        <section class="card">
+            <h3>Tracked Videos</h3>
+            <div class="video-grid" id="youtubeHistoryGrid"></div>
+        </section>
+
+    </section>
+</main>
+
+<script src="api-client.js"></script>
+<script src="youtube-focus.js"></script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+:root {
+  --bg: #05080f;
+  --card: rgba(14, 20, 34, 0.82);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --text: #edf2ff;
+  --muted: #9ca9cb;
+  --primary: #2ae7c7;
+  --link: #90a4ff;
+  --danger: #ff709a;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Inter", sans-serif;
+  color: var(--text);
+  background: radial-gradient(circle at 5% 8%, #17254b, var(--bg) 30%), var(--bg);
+  display: grid;
+  place-items: center;
+  padding: 1.2rem;
+}
+
+.halo {
+  position: fixed;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.4;
+  z-index: -1;
+}
+
+.halo-left { top: -130px; left: -70px; background: #6f5eff; }
+.halo-right { bottom: -170px; right: -40px; background: #00c8a9; }
+
+.login-shell {
+  width: min(1050px, 100%);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--card-border);
+  border-radius: 24px;
+  overflow: hidden;
+  background: rgba(4, 8, 15, 0.6);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+
+.brand-panel,
+.auth-panel {
+  padding: 2rem;
+}
+
+.brand-panel {
+  background: linear-gradient(160deg, rgba(111, 94, 255, 0.26), rgba(3, 11, 26, 0.4));
+  border-right: 1px solid var(--card-border);
+}
+
+.brand-link {
+  display: inline-flex;
+  gap: 0.8rem;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.logo {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #7f86ff, #9dffef);
+  color: #0b1025;
+}
+
+.brand { margin: 0; font-weight: 700; }
+.tagline { margin: 0.1rem 0 0; font-size: 0.84rem; color: var(--muted); }
+
+h1 {
+  margin: 1.4rem 0 0.7rem;
+  line-height: 1.25;
+  font-size: clamp(1.6rem, 2vw, 2.2rem);
+}
+
+p { color: var(--muted); line-height: 1.6; }
+
+.highlights {
+  margin: 1.2rem 0 0;
+  padding-left: 1.1rem;
+  color: var(--text);
+}
+
+.highlights li { margin-bottom: 0.6rem; }
+
+.auth-panel {
+  background: var(--card);
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--primary);
+  font-size: 0.8rem;
+  letter-spacing: 0.11em;
+}
+
+h2 {
+  margin: 0.35rem 0;
+  font-size: 1.6rem;
+}
+
+.muted { margin: 0; color: var(--muted); }
+
+.login-form {
+  margin-top: 1.2rem;
+  display: grid;
+  gap: 0.8rem;
+}
+
+label {
+  display: grid;
+  gap: 0.35rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+input {
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--text);
+  padding: 0.72rem;
+  font: inherit;
+}
+
+input:focus {
+  outline: none;
+  border-color: rgba(42, 231, 199, 0.8);
+  box-shadow: 0 0 0 3px rgba(42, 231, 199, 0.15);
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.9rem;
+}
+
+.remember {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--muted);
+}
+
+.remember input { accent-color: #7a7cff; }
+
+.inline-link {
+  color: var(--link);
+  text-decoration: none;
+}
+
+.inline-link:hover { text-decoration: underline; }
+
+.primary-btn,
+.google-btn {
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  padding: 0.78rem 1rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.primary-btn {
+  margin-top: 0.2rem;
+  color: #031721;
+  background: linear-gradient(135deg, var(--primary), #9afce6);
+}
+
+.primary-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.status {
+  min-height: 1.25rem;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.status.error { color: var(--danger); }
+.status.success { color: var(--primary); }
+
+.divider {
+  margin: 1rem 0;
+  position: relative;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 35%;
+  height: 1px;
+  background: var(--card-border);
+}
+
+.divider::before { left: 0; }
+.divider::after { right: 0; }
+
+.google-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  color: var(--text);
+  border: 1px solid var(--card-border);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.google-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.footnote {
+  margin: 1rem 0 0;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 920px) {
+  .login-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .brand-panel {
+    border-right: none;
+    border-bottom: 1px solid var(--card-border);
+  }
+}
