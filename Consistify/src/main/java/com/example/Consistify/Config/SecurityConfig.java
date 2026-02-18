@@ -63,7 +63,7 @@ public class SecurityConfig {
                                 "/login/**",
                                 "/oauth2/**",
                                 "/favicon.ico",
-                                "/api/**"
+                                "/api/public/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
@@ -72,7 +72,7 @@ public class SecurityConfig {
                                 .userService(customOAuth2UserService)
                         )
                         // Redirect to frontend URL from environment variable
-                        .defaultSuccessUrl(frontendUrl + "/login.html?auth=success", true)
+                        .defaultSuccessUrl("/oauth-success", true)
                 )
                 .logout(logout -> logout
                         .logoutSuccessUrl("/")
