@@ -16,7 +16,7 @@ import java.util.Map;
 
 @RestController
 public class AuthController {
-    @Value("${app.frontend.url:https://consistify-six.vercel.app}")
+    @Value("${app.frontend.url:http://localhost:550}")
     private String frontendUrl;
 
     @GetMapping("/api/auth/me")

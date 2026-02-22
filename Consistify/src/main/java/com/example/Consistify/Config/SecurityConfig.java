@@ -10,9 +10,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
@@ -30,49 +27,29 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
+                .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(auth -> auth
-                        // Static files + public endpoints
+                        // Allow Swagger resources
                         .requestMatchers(
-                                "/login.html",
-                                "/login.css",
-                                "/styles.css",
-                                "/js/**",
-                                "/css/**",
-                                "/images/**",
-                                "/oauth2/**",
-                                "/actuator/health",
-                                "/api/public/**"
-                        ).permitAll()
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**"
+                        ).authenticated()
 
-                        // API endpoints require login
-                        .requestMatchers("/api/**").authenticated()
-
-                        // Everything else requires login
+                        // Everything else requires authentication
                         .anyRequest().authenticated()
-                )
-
-                // Return 401 for API instead of redirect
-                .exceptionHandling(exception -> exception
-                        .defaultAuthenticationEntryPointFor(
-                                (request, response, authException) ->
-                                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED),
-                                new AntPathRequestMatcher("/api/**")
-                        )
                 )
 
                 .oauth2Login(oauth -> oauth
                         .userInfoEndpoint(userInfo ->
                                 userInfo.userService(customOAuth2UserService)
                         )
-                        // After successful login → go directly to dashboard
-                        .defaultSuccessUrl("/index.html", true)
+                        // After login → redirect directly to Swagger
+                        .defaultSuccessUrl("/swagger-ui/index.html", true)
                 )
 
                 .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login.html")
+                        .logoutSuccessUrl("/login")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                 )

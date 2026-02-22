@@ -17,11 +17,19 @@ async function fetchCurrentUser() {
 }
 
 // Only run after OAuth success
-const urlParams = new URLSearchParams(window.location.search);
-if (urlParams.get("auth") === "success") {
-  fetchCurrentUser();
-}
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const response = await fetch("/api/auth/me", {
+      credentials: "include"
+    });
 
+    if (response.ok) {
+      window.location.href = "index.html";
+    }
+  } catch (e) {
+    console.log("Not logged in");
+  }
+});
 // Google login button
 document.getElementById("googleLogin").addEventListener("click", () => {
   window.location.href = `${API_BASE}/oauth2/authorization/google`;
