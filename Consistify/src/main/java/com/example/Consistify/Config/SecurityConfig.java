@@ -25,31 +25,39 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         http
                 .csrf(csrf -> csrf.disable())
 
-                .authorizeHttpRequests(auth -> auth
-                        // Allow Swagger resources
-                        .requestMatchers(
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**"
-                        ).authenticated()
+                // No CORS bean needed — frontend is served by Spring on the same origin
 
-                        // Everything else requires authentication
+                .authorizeHttpRequests(auth -> auth
+                        // Static files — anyone can load the HTML pages
+                        .requestMatchers(
+                                "/",
+                                "/index.html",
+                                "/login.html",
+                                "/oauth2/**",
+                                "/login/**",
+                                "/api/auth/me",
+                                "/error"
+                        ).permitAll()
+
+                        // Swagger requires login
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").authenticated()
+
+                        // Everything else requires a session
                         .anyRequest().authenticated()
                 )
 
                 .oauth2Login(oauth -> oauth
-                        .userInfoEndpoint(userInfo ->
-                                userInfo.userService(customOAuth2UserService)
-                        )
-                        // After login → redirect directly to Swagger
-                        .defaultSuccessUrl("/swagger-ui/index.html", true)
+                        .userInfoEndpoint(u -> u.userService(customOAuth2UserService))
+                        // After Google login → go straight to the app
+                        .defaultSuccessUrl("/index.html", true)
+                        .failureUrl("/login.html?error=true")
                 )
 
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/login")
+                        .logoutSuccessUrl("/login.html")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                 )

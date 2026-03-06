@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Consistify — Sign In</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+    <style>
+        :root{
+          --bg:#0d0f12;--surface:#13161c;--card:#191d26;--border:#242933;
+          --accent:#c8f135;--text:#eef1f6;--muted:#616878;--muted2:#8892a4;
+          --font-h:'Syne',sans-serif;--font-m:'DM Mono',monospace;
+        }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        body{
+          background:var(--bg);color:var(--text);font-family:var(--font-m);
+          min-height:100vh;display:flex;align-items:center;justify-content:center;
+        }
+        body::before{
+          content:'';position:fixed;inset:0;pointer-events:none;
+          background-image:
+            linear-gradient(rgba(200,241,53,.03) 1px,transparent 1px),
+            linear-gradient(90deg,rgba(200,241,53,.03) 1px,transparent 1px);
+          background-size:52px 52px;
+        }
+        body::after{
+          content:'';position:fixed;top:-160px;left:50%;transform:translateX(-50%);
+          width:700px;height:440px;pointer-events:none;
+          background:radial-gradient(ellipse,rgba(200,241,53,.07) 0%,transparent 68%);
+        }
+        .box{
+          position:relative;z-index:1;
+          background:var(--card);border:1px solid var(--border);border-radius:20px;
+          padding:52px 48px;width:100%;max-width:420px;text-align:center;
+          box-shadow:0 24px 80px rgba(0,0,0,.7);
+        }
+        .logo{font-family:var(--font-h);font-size:30px;font-weight:800;letter-spacing:-.5px}
+        .logo span{color:var(--accent)}
+        .tagline{font-size:10px;color:var(--muted);letter-spacing:2.5px;text-transform:uppercase;margin-top:5px}
+        .sep{border:none;border-top:1px solid var(--border);margin:32px 0}
+        .headline{font-family:var(--font-h);font-size:21px;font-weight:700;margin-bottom:8px}
+        .sub{font-size:12.5px;color:var(--muted2);line-height:1.7;margin-bottom:32px}
+        .btn-google{
+          display:flex;align-items:center;justify-content:center;gap:12px;
+          width:100%;padding:14px 20px;border-radius:12px;text-decoration:none;
+          background:var(--surface);border:1px solid var(--border);
+          color:var(--text);font-family:var(--font-m);font-size:14px;font-weight:500;
+          cursor:pointer;transition:all .2s ease;
+        }
+        .btn-google:hover{
+          background:rgba(200,241,53,.06);border-color:rgba(200,241,53,.35);
+          color:var(--accent);transform:translateY(-1px);
+        }
+        .note{font-size:10.5px;color:var(--muted);margin-top:22px;line-height:1.7}
+        .err{
+          background:rgba(255,92,92,.08);border:1px solid rgba(255,92,92,.3);
+          border-radius:9px;padding:10px 14px;font-size:12.5px;color:#ff6b6b;margin-bottom:20px;
+        }
+        #check{
+          position:fixed;inset:0;background:var(--bg);z-index:99;
+          display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;
+        }
+        .spinner{
+          width:28px;height:28px;border:2.5px solid var(--border);
+          border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;
+        }
+        #check p{font-size:12px;color:var(--muted)}
+        @keyframes spin{to{transform:rotate(360deg)}}
+    </style>
+</head>
+<body>
+
+<div id="check">
+    <div class="spinner"></div>
+    <p>Checking session…</p>
+</div>
+
+<div class="box" id="login-box" style="display:none">
+    <div class="logo">Con<span>sist</span>ify</div>
+    <div class="tagline">Track honestly. Learn consistently.</div>
+    <hr class="sep"/>
+
+    <div id="err-msg" style="display:none" class="err">
+        Login failed. Please try again.
+    </div>
+
+    <div class="headline">Welcome back</div>
+    <div class="sub">Sign in with Google to continue tracking your learning progress.</div>
+
+    <!--
+      This href goes to Spring Boot's OAuth2 endpoint.
+      Since login.html is NOW served by Spring on localhost:8080,
+      a relative path works perfectly — no CORS, no cross-origin issues.
+    -->
+    <a class="btn-google" href="/oauth2/authorization/google">
+        <svg width="19" height="19" viewBox="0 0 18 18" fill="none">
+            <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908C16.618 14.013 17.64 11.8 17.64 9.2z" fill="#4285F4"/>
+            <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/>
+            <path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
+            <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+        </svg>
+        Continue with Google
+    </a>
+
+    <div class="note">No ads. No data selling.<br/>Your learning history stays private.</div>
+</div>
+
+<script>
+    // Show error if redirected back with ?error
+    if (new URLSearchParams(location.search).get('error')) {
+      document.getElementById('err-msg').style.display = 'block';
+    }
+
+    function showLogin() {
+      document.getElementById('check').style.display = 'none';
+      document.getElementById('login-box').style.display = 'block';
+    }
+
+    // Since we're on the same origin (localhost:8080), no CORS at all
+    fetch('/api/auth/me', { credentials: 'include' })
+      .then(r => {
+        if (r.ok) location.replace('/index.html');
+        else showLogin();
+      })
+      .catch(() => showLogin());
+</script>
+</body>
+</html>

@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Consistify</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+    <style>
+        :root{
+          --bg:#0d0f12;--surface:#13161c;--card:#191d26;--border:#242933;
+          --accent:#c8f135;--accent2:#3bffa0;--accent3:#ffb84d;--danger:#ff5c5c;
+          --text:#eef1f6;--muted:#616878;--muted2:#8892a4;
+          --font-h:'Syne',sans-serif;--font-m:'DM Mono',monospace;
+          --r:12px;--tr:.2s cubic-bezier(.4,0,.2,1);
+        }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        html{scroll-behavior:smooth}
+        body{background:var(--bg);color:var(--text);font-family:var(--font-m);min-height:100vh;overflow-x:hidden}
+        body::before{
+          content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+          background-image:linear-gradient(rgba(200,241,53,.025) 1px,transparent 1px),
+            linear-gradient(90deg,rgba(200,241,53,.025) 1px,transparent 1px);
+          background-size:52px 52px;
+        }
+        ::-webkit-scrollbar{width:5px}
+        ::-webkit-scrollbar-track{background:var(--surface)}
+        ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+        /* AUTH OVERLAY */
+        #auth-overlay{
+          position:fixed;inset:0;background:var(--bg);z-index:9999;
+          display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;
+        }
+        .spin{width:30px;height:30px;border:2.5px solid var(--border);
+          border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;}
+        #auth-overlay p{font-size:12px;color:var(--muted)}
+        @keyframes spin{to{transform:rotate(360deg)}}
+
+        /* LAYOUT */
+        .shell{display:none;min-height:100vh;position:relative;z-index:1}
+
+        /* SIDEBAR */
+        .sidebar{
+          width:220px;background:var(--surface);border-right:1px solid var(--border);
+          display:flex;flex-direction:column;padding:24px 0;
+          position:fixed;top:0;left:0;bottom:0;z-index:100;overflow-y:auto;
+        }
+        .logo{padding:0 20px 24px;border-bottom:1px solid var(--border);margin-bottom:16px}
+        .logo-title{font-family:var(--font-h);font-size:20px;font-weight:800;letter-spacing:-.5px}
+        .logo-title span{color:var(--accent)}
+        .logo-sub{font-size:9px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:3px}
+        nav{flex:1;display:flex;flex-direction:column;gap:2px;padding:0 10px}
+        .nav-item{
+          display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;
+          font-size:12.5px;color:var(--muted2);cursor:pointer;
+          transition:all var(--tr);border:1px solid transparent;font-family:var(--font-m);user-select:none;
+        }
+        .nav-item:hover{color:var(--text);background:var(--card)}
+        .nav-item.active{color:var(--accent);background:rgba(200,241,53,.07);border-color:rgba(200,241,53,.15)}
+        .nav-icon{font-size:15px;width:18px;text-align:center;flex-shrink:0}
+
+        /* USER CHIP */
+        .sidebar-bottom{padding:14px 12px 0;border-top:1px solid var(--border);margin-top:auto}
+        .user-chip{
+          display:flex;align-items:center;gap:10px;
+          background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px;
+        }
+        .avatar{
+          width:32px;height:32px;border-radius:50%;background:var(--accent);
+          display:flex;align-items:center;justify-content:center;
+          font-family:var(--font-h);font-size:13px;font-weight:800;color:#000;flex-shrink:0;
+        }
+        .user-info{flex:1;min-width:0}
+        .user-name{font-size:12.5px;font-weight:700;font-family:var(--font-h);
+          white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+        .user-email{font-size:10px;color:var(--muted);
+          white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+        .logout-btn{
+          width:100%;margin-top:8px;padding:8px;border-radius:8px;
+          background:transparent;border:1px solid var(--border);
+          color:var(--muted2);font-family:var(--font-m);font-size:11px;cursor:pointer;transition:all var(--tr);
+        }
+        .logout-btn:hover{color:var(--danger);border-color:rgba(255,92,92,.4);background:rgba(255,92,92,.05)}
+
+        /* MAIN */
+        .main{margin-left:220px;flex:1;padding:32px 36px;min-height:100vh}
+        .page{display:none}
+        .page.active{display:block;animation:fadeUp .25s ease}
+        @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+        /* PAGE HEADER */
+        .ph{margin-bottom:28px}
+        .ph h1{font-family:var(--font-h);font-size:28px;font-weight:800;letter-spacing:-1px}
+        .ph p{font-size:12px;color:var(--muted2);margin-top:5px}
+
+        /* GRIDS */
+        .g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+        .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+
+        /* CARD */
+        .card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px}
+        .card-title{font-family:var(--font-h);font-size:12px;font-weight:700;color:var(--muted);
+          text-transform:uppercase;letter-spacing:1px;margin-bottom:16px}
+
+        /* STAT */
+        .stat{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px}
+        .stat-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+        .stat-val{font-family:var(--font-h);font-size:36px;font-weight:800;margin:6px 0 3px;line-height:1}
+        .stat-sub{font-size:11px;color:var(--muted2)}
+        .c-green .stat-val{color:var(--accent)}
+        .c-teal  .stat-val{color:var(--accent2)}
+        .c-amber .stat-val{color:var(--accent3)}
+        .c-red   .stat-val{color:var(--danger)}
+
+        /* FORM */
+        .fg{margin-bottom:14px}
+        .fg label{display:block;font-size:10.5px;color:var(--muted2);margin-bottom:5px;
+          text-transform:uppercase;letter-spacing:.8px}
+        .fg input,.fg select,.fg textarea{
+          width:100%;background:var(--surface);border:1px solid var(--border);
+          border-radius:9px;padding:10px 14px;color:var(--text);
+          font-family:var(--font-m);font-size:13px;outline:none;transition:border-color var(--tr);
+        }
+        .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--accent)}
+        .fg select option{background:var(--card)}
+        .fg textarea{resize:vertical;min-height:72px}
+
+        /* BUTTONS */
+        .btn{
+          display:inline-flex;align-items:center;gap:7px;
+          padding:10px 20px;border-radius:9px;font-family:var(--font-m);
+          font-size:13px;font-weight:500;cursor:pointer;
+          transition:all var(--tr);border:1px solid transparent;
+        }
+        .btn-p{background:var(--accent);color:#000;border-color:var(--accent)}
+        .btn-p:hover{background:#d4ff44;transform:translateY(-1px)}
+        .btn-s{background:transparent;color:var(--text);border-color:var(--border)}
+        .btn-s:hover{background:var(--card);border-color:var(--muted)}
+        .btn-d{background:rgba(255,92,92,.1);color:var(--danger);border-color:rgba(255,92,92,.25)}
+        .btn-d:hover{background:rgba(255,92,92,.2)}
+        .btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
+        .btn-sm{padding:6px 12px;font-size:11.5px}
+
+        /* TABLE */
+        .tbl-wrap{overflow-x:auto;border-radius:var(--r);border:1px solid var(--border)}
+        table{width:100%;border-collapse:collapse;font-size:12.5px}
+        thead tr{background:var(--surface);border-bottom:1px solid var(--border)}
+        th{padding:10px 14px;text-align:left;color:var(--muted);font-weight:500;
+          text-transform:uppercase;font-size:10px;letter-spacing:.8px}
+        tbody tr{border-bottom:1px solid var(--border);transition:background var(--tr)}
+        tbody tr:last-child{border-bottom:none}
+        tbody tr:hover{background:rgba(255,255,255,.02)}
+        td{padding:11px 14px;color:var(--text)}
+
+        /* BADGE */
+        .badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:99px;
+          font-size:10.5px;font-weight:500;letter-spacing:.3px}
+        .bg{background:rgba(200,241,53,.1);color:var(--accent);border:1px solid rgba(200,241,53,.2)}
+        .bt{background:rgba(59,255,160,.1);color:var(--accent2);border:1px solid rgba(59,255,160,.2)}
+        .ba{background:rgba(255,184,77,.1);color:var(--accent3);border:1px solid rgba(255,184,77,.2)}
+        .br{background:rgba(255,92,92,.1);color:var(--danger);border:1px solid rgba(255,92,92,.2)}
+        .bx{background:rgba(255,255,255,.05);color:var(--muted2);border:1px solid var(--border)}
+
+        /* TOAST */
+        #toast{position:fixed;bottom:28px;right:28px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+        .ti{
+          background:var(--card);border:1px solid var(--border);border-radius:10px;
+          padding:12px 18px;font-size:13px;min-width:200px;max-width:320px;
+          animation:slIn .2s ease;display:flex;align-items:center;gap:10px;
+          box-shadow:0 8px 32px rgba(0,0,0,.5);
+        }
+        .ti.success{border-color:rgba(200,241,53,.3);color:var(--accent)}
+        .ti.error  {border-color:rgba(255,92,92,.3); color:var(--danger)}
+        .ti.info   {border-color:rgba(59,255,160,.3);color:var(--accent2)}
+        @keyframes slIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+
+        /* LOADER */
+        .loader{display:inline-block;width:16px;height:16px;border:2px solid var(--border);
+          border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite}
+
+        /* HEALTH BAR */
+        .hbar{height:6px;border-radius:3px;background:var(--border);overflow:hidden;margin-top:8px}
+        .hfill{height:100%;border-radius:3px;transition:width .5s ease}
+        .hgood .hfill{background:var(--accent2)}
+        .hwarn .hfill{background:var(--accent3)}
+        .hbad  .hfill{background:var(--danger)}
+
+        /* YOUTUBE */
+        .yt-wrap{position:relative;padding-bottom:56.25%;height:0;border-radius:var(--r);overflow:hidden;background:#000}
+        .yt-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+
+        /* TIMER */
+        .timer-disp{
+          font-family:var(--font-h);font-size:52px;font-weight:800;
+          letter-spacing:-2px;color:var(--accent);text-align:center;padding:24px 0;line-height:1;
+        }
+        .timer-ctrl{display:flex;gap:10px;justify-content:center}
+
+        /* PAGINATION */
+        .pag{display:flex;gap:6px;align-items:center;margin-top:14px;justify-content:flex-end}
+        .pb{
+          padding:5px 11px;border-radius:7px;font-size:11.5px;cursor:pointer;font-family:var(--font-m);
+          background:var(--card);border:1px solid var(--border);color:var(--muted2);transition:all var(--tr);
+        }
+        .pb:hover,.pb.active{background:var(--accent);color:#000;border-color:var(--accent)}
+        .pb:disabled{opacity:.3;cursor:not-allowed}
+
+        /* EMPTY */
+        .empty{text-align:center;padding:40px 20px;color:var(--muted)}
+        .ei{font-size:36px;margin-bottom:10px;opacity:.35}
+        .et{font-size:12.5px}
+
+        /* UTILS */
+        .row{display:flex;align-items:center;gap:8px}
+        .row-b{display:flex;align-items:center;justify-content:space-between}
+        .sec{margin-bottom:22px}
+    </style>
+</head>
+<body>
+
+<div id="auth-overlay">
+    <div class="spin"></div>
+    <p>Loading…</p>
+</div>
+
+<div id="toast"></div>
+
+<div class="shell" id="app">
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-title">Con<span>sist</span>ify</div>
+            <div class="logo-sub">Track honestly.</div>
+        </div>
+        <nav>
+            <div class="nav-item active" data-page="dashboard" onclick="go('dashboard')">
+                <span class="nav-icon">⬡</span>Dashboard
+            </div>
+            <div class="nav-item" data-page="skills" onclick="go('skills')">
+                <span class="nav-icon">◈</span>Skills
+            </div>
+            <div class="nav-item" data-page="practice" onclick="go('practice')">
+                <span class="nav-icon">◎</span>Practice Log
+            </div>
+            <div class="nav-item" data-page="health" onclick="go('health')">
+                <span class="nav-icon">◐</span>Skill Health
+            </div>
+            <div class="nav-item" data-page="progress" onclick="go('progress')">
+                <span class="nav-icon">△</span>Progress
+            </div>
+            <div class="nav-item" data-page="youtube" onclick="go('youtube')">
+                <span class="nav-icon">▷</span>YouTube
+            </div>
+        </nav>
+        <div class="sidebar-bottom">
+            <div class="user-chip">
+                <div class="avatar" id="user-avatar">?</div>
+                <div class="user-info">
+                    <div class="user-name" id="user-name">—</div>
+                    <div class="user-email" id="user-email">—</div>
+                </div>
+            </div>
+            <button class="logout-btn" onclick="logout()">↩ Sign out</button>
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <!-- DASHBOARD -->
+        <div id="page-dashboard" class="page active">
+            <div class="ph">
+                <h1>Dashboard</h1>
+                <p id="dash-date"></p>
+            </div>
+            <div class="g4 sec">
+                <div class="stat c-green">
+                    <div class="stat-lbl">Total Skills</div>
+                    <div class="stat-val" id="d-skills">—</div>
+                    <div class="stat-sub">being tracked</div>
+                </div>
+                <div class="stat c-teal">
+                    <div class="stat-lbl">Active Skills</div>
+                    <div class="stat-val" id="d-active">—</div>
+                    <div class="stat-sub">practiced recently</div>
+                </div>
+                <div class="stat c-amber">
+                    <div class="stat-lbl">At Risk</div>
+                    <div class="stat-val" id="d-atrisk">—</div>
+                    <div class="stat-sub">need practice</div>
+                </div>
+                <div class="stat c-red">
+                    <div class="stat-lbl">Decayed</div>
+                    <div class="stat-val" id="d-decayed">—</div>
+                    <div class="stat-sub">skills lost</div>
+                </div>
+            </div>
+            <div class="g2">
+                <div class="card">
+                    <div class="card-title">Recent Practice</div>
+                    <div id="d-recent"><div class="empty"><div class="loader"></div></div></div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Skill Health Snapshot</div>
+                    <div id="d-health"><div class="empty"><div class="loader"></div></div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SKILLS -->
+        <div id="page-skills" class="page">
+            <div class="row-b ph">
+                <div><h1>Skills</h1><p>Manage the skills you are tracking</p></div>
+                <button class="btn btn-p" onclick="toggleSkillForm()">＋ Add Skill</button>
+            </div>
+            <div id="skill-form" class="card sec" style="display:none">
+                <div class="card-title">New Skill</div>
+                <div class="g2">
+                    <div class="fg"><label>Skill Name *</label><input id="sk-name" placeholder="e.g. Dynamic Programming"/></div>
+                    <div class="fg"><label>Category *</label><input id="sk-cat" placeholder="e.g. Algorithms"/></div>
+                </div>
+                <div class="fg">
+                    <label>Decay Days * <span style="color:var(--muted);font-size:10px">(days before skill starts decaying)</span></label>
+                    <input id="sk-decay" type="number" min="1" placeholder="e.g. 7"/>
+                </div>
+                <div class="row">
+                    <button class="btn btn-p" onclick="addSkill()">Save Skill</button>
+                    <button class="btn btn-s" onclick="toggleSkillForm()">Cancel</button>
+                </div>
+            </div>
+            <div id="skills-grid" class="g2 sec"></div>
+            <div class="pag" id="skills-pag"></div>
+        </div>
+
+        <!-- PRACTICE LOG -->
+        <div id="page-practice" class="page">
+            <div class="ph"><h1>Practice Log</h1><p>One honest entry per skill per day</p></div>
+            <div class="g2 sec">
+                <div class="card">
+                    <div class="card-title">Log Today's Practice</div>
+                    <div class="fg">
+                        <label>Skill *</label>
+                        <select id="pr-skill-id">
+                            <option value="">— Select a skill —</option>
+                        </select>
+                    </div>
+                    <div class="fg">
+                        <label>Practice Date *</label>
+                        <input id="pr-date" type="date"/>
+                    </div>
+                    <div class="fg">
+                        <label>Effort Level *</label>
+                        <select id="pr-effort">
+                            <option value="HIGH">High</option>
+                            <option value="MEDIUM" selected>Medium</option>
+                            <option value="LOW">Low</option>
+                        </select>
+                    </div>
+                    <div class="fg">
+                        <label>Duration (minutes) *</label>
+                        <input id="pr-dur" type="number" min="1" placeholder="e.g. 45"/>
+                    </div>
+                    <div class="fg"><label>Notes</label>
+                        <textarea id="pr-notes" placeholder="What did you work on?"></textarea>
+                    </div>
+                    <button class="btn btn-p" onclick="logPractice()">Log Practice</button>
+                </div>
+                <div class="card">
+                    <div class="card-title">Practice Timer</div>
+                    <div class="timer-disp" id="tmr-disp">00:00:00</div>
+                    <div class="timer-ctrl">
+                        <button class="btn btn-p" id="btn-start" onclick="timerStart()">▶ Start</button>
+                        <button class="btn btn-s" id="btn-pause" onclick="timerPause()" disabled>⏸ Pause</button>
+                        <button class="btn btn-d" id="btn-stop"  onclick="timerStop()"  disabled>■ Stop</button>
+                    </div>
+                    <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:12px">
+                        Stopping auto-fills the log form with recorded time
+                    </p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="row-b" style="margin-bottom:14px">
+                    <div class="card-title" style="margin-bottom:0">Session History</div>
+                    <button class="btn btn-s btn-sm" onclick="loadPractices()">↻ Refresh</button>
+                </div>
+                <div class="tbl-wrap">
+                    <table>
+                        <thead><tr>
+                            <th>Skill</th><th>Effort</th><th>Duration</th><th>Date</th>
+                        </tr></thead>
+                        <tbody id="pr-tbody"></tbody>
+                    </table>
+                </div>
+                <div class="pag" id="pr-pag"></div>
+            </div>
+        </div>
+
+        <!-- SKILL HEALTH -->
+        <div id="page-health" class="page">
+            <div class="ph"><h1>Skill Health</h1><p>Skills at risk of decay — practice before you lose them</p></div>
+            <div id="health-grid" class="g2"></div>
+        </div>
+
+        <!-- PROGRESS -->
+        <div id="page-progress" class="page">
+            <div class="ph"><h1>Progress</h1><p>Your overall learning journey</p></div>
+            <div class="g2 sec">
+                <div class="card">
+                    <div class="card-title">Skill Overview</div>
+                    <div id="prog-skills"><div class="empty"><div class="loader"></div></div></div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Practice Summary</div>
+                    <div id="prog-summary"><div class="empty"><div class="loader"></div></div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- YOUTUBE -->
+        <div id="page-youtube" class="page">
+            <div class="ph"><h1>YouTube Learning</h1><p>Distraction-free video learning with watch time tracking</p></div>
+            <div class="g2 sec">
+                <div class="card">
+                    <div class="card-title">Load a Video</div>
+                    <div class="fg"><label>YouTube URL</label>
+                        <input id="yt-url" placeholder="https://www.youtube.com/watch?v=..."/>
+                    </div>
+                    <div class="row">
+                        <button class="btn btn-p" onclick="ytLoad()">▷ Load &amp; Save</button>
+                        <button class="btn btn-s" onclick="ytLoadCurrent()">↻ Load Current</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Log Watch Time</div>
+                    <div class="fg"><label>Video ID</label>
+                        <input id="yt-id" placeholder="e.g. dQw4w9WgXcQ"/>
+                    </div>
+                    <div class="fg"><label>Title</label>
+                        <input id="yt-title" placeholder="e.g. CS Trees Lecture"/>
+                    </div>
+                    <div class="fg"><label>Seconds Watched</label>
+                        <input id="yt-secs" type="number" min="0" placeholder="e.g. 1800"/>
+                    </div>
+                    <button class="btn btn-p" onclick="ytLogWatch()">Log Watch Time</button>
+                </div>
+            </div>
+            <div class="card sec" id="yt-embed-card" style="display:none">
+                <div class="card-title">Now Watching</div>
+                <div class="yt-wrap">
+                    <iframe id="yt-iframe" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+                </div>
+            </div>
+            <div class="card">
+                <div class="row-b" style="margin-bottom:14px">
+                    <div class="card-title" style="margin-bottom:0">Watch History</div>
+                    <button class="btn btn-s btn-sm" onclick="loadYtHistory()">↻ Refresh</button>
+                </div>
+                <div class="tbl-wrap">
+                    <table>
+                        <thead><tr>
+                            <th>Title</th><th>Video ID</th><th>Watched</th><th>Date</th>
+                        </tr></thead>
+                        <tbody id="yt-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script>
+    /* ─────────────────────────────────────────────────────
+       All fetch calls use RELATIVE paths (/api/...)
+       because this file is served by Spring on localhost:8080.
+       No CORS. No BASE URL needed. Credentials still required
+       so Spring Security reads the JSESSIONID cookie.
+    ───────────────────────────────────────────────────── */
+
+    async function checkAuth() {
+      try {
+        const r = await fetch('/api/auth/me', { credentials: 'include' });
+        if (r.ok) {
+          const user = await r.json();
+          const name  = user.name  || user.email || 'User';
+          const email = user.email || '';
+          document.getElementById('user-name').textContent   = name;
+          document.getElementById('user-email').textContent  = email;
+          document.getElementById('user-avatar').textContent = name.charAt(0).toUpperCase();
+          document.getElementById('auth-overlay').style.display = 'none';
+          document.getElementById('app').style.display = 'flex';
+          loadDashboard();
+        } else {
+          location.replace('/login.html');
+        }
+      } catch (_) {
+        location.replace('/login.html');
+      }
+    }
+
+    function logout() {
+      fetch('/logout', { method: 'POST', credentials: 'include' })
+        .finally(() => location.replace('/login.html'));
+    }
+
+    /* ─── NAVIGATION ─── */
+    function go(page) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      document.getElementById('page-' + page).classList.add('active');
+      document.querySelector(`.nav-item[data-page="${page}"]`).classList.add('active');
+      const fn = {
+        dashboard : loadDashboard,
+        skills    : () => loadSkills(),
+        practice  : () => { loadSkillDropdown(); loadPractices(); },
+        health    : loadSkillHealth,
+        progress  : loadProgress,
+        youtube   : loadYtHistory,
+      };
+      if (fn[page]) fn[page]();
+    }
+
+    /* ─── HTTP — relative paths, credentials for session cookie ─── */
+    async function api(method, path, body) {
+      const opts = {
+        method,
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
+      };
+      if (body) opts.body = JSON.stringify(body);
+
+      let r;
+      try { r = await fetch(path, opts); }
+      catch (_) { throw new Error('Backend unreachable'); }
+
+      if (r.status === 401) { location.replace('/login.html'); throw new Error('Session expired'); }
+      if (!r.ok) {
+        let msg = `HTTP ${r.status}`;
+        try { const e = await r.json(); msg = e.message || e.error || msg; } catch (_) {}
+        throw new Error(msg);
+      }
+      const ct = r.headers.get('content-type') || '';
+      if (ct.includes('application/json')) return r.json();
+      return r.text();
+    }
+
+    const GET  = path      => api('GET',  path);
+    const POST = (path, b) => api('POST', path, b);
+
+    /* ─── TOAST ─── */
+    function toast(msg, type = 'info') {
+      const el = document.createElement('div');
+      el.className = `ti ${type}`;
+      const ic = { success:'✓', error:'✕', info:'◎' };
+      el.innerHTML = `<span>${ic[type]||'◎'}</span><span>${msg}</span>`;
+      document.getElementById('toast').appendChild(el);
+      setTimeout(() => el.remove(), 3500);
+    }
+
+    /* ─── UTILS ─── */
+    function fmtDate(s) {
+      if (!s) return '—';
+      return new Date(s).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+    }
+    function fmtMin(m) { return m ? m + 'm' : null; }
+    function fmtSec(s) {
+      if (!s) return '—';
+      const h = Math.floor(s/3600), m = Math.floor((s%3600)/60);
+      return h ? `${h}h ${m}m` : `${m}m`;
+    }
+    function effortBadge(e) {
+      const map = { HIGH:'br', MEDIUM:'ba', LOW:'bt' };
+      return `<span class="badge ${map[e]||'bx'}">${e||'—'}</span>`;
+    }
+    function setLoading(id) {
+      document.getElementById(id).innerHTML = '<div class="empty"><div class="loader"></div></div>';
+    }
+    function setEmpty(id, icon, text) {
+      document.getElementById(id).innerHTML =
+        `<div class="empty"><div class="ei">${icon}</div><div class="et">${text}</div></div>`;
+    }
+
+    /* ─── DASHBOARD ─── */
+    document.getElementById('dash-date').textContent =
+      new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+    async function loadDashboard() {
+      try {
+        const d = await GET('/api/v1/dashboard');
+        document.getElementById('d-skills').textContent  = d.totalSkills  ?? '—';
+        document.getElementById('d-active').textContent  = d.activeSkills ?? '—';
+        document.getElementById('d-atrisk').textContent  = d.atRiskSkills ?? '—';
+        document.getElementById('d-decayed').textContent = d.decayedSkills ?? '—';
+      } catch (e) { toast('Dashboard: ' + e.message, 'error'); }
+
+      try {
+        const p = await GET('/api/v1/practice/my?size=5&page=0');
+        const rows = (p.content || p || []).slice(0, 5);
+        if (!rows.length) { setEmpty('d-recent','◎','No sessions yet'); }
+        else {
+          document.getElementById('d-recent').innerHTML = rows.map(r => `
+            <div class="row-b" style="padding:9px 0;border-bottom:1px solid var(--border)">
+              <div>
+                <div style="font-size:13px;font-family:var(--font-h);font-weight:600">
+                  ${r.skillName||r.skill||'—'}
+                </div>
+                <div style="font-size:11px;color:var(--muted2)">
+                  ${r.platform||''} · ${fmtDate(r.createdAt||r.date)}
+                </div>
+              </div>
+              ${effortBadge(r.effortIntensity||r.effort)}
+            </div>`).join('');
+        }
+      } catch (_) {}
+
+      try {
+        const h = await GET('/api/v1/skills/health');
+        if (!h.length) { setEmpty('d-health','◐','All skills healthy!'); }
+        else {
+          document.getElementById('d-health').innerHTML = h.slice(0,5).map(s => {
+            const days = s.decayDays||s.daysSincePractice||0;
+            const pct  = Math.max(5, 100 - days * 12);
+            const cls  = pct > 60 ? 'hgood' : pct > 30 ? 'hwarn' : 'hbad';
+            return `
+              <div style="margin-bottom:14px">
+                <div class="row-b">
+                  <span style="font-size:13px;font-family:var(--font-h);font-weight:600">
+                    ${s.skillName||s.name||'—'}
+                  </span>
+                  <span style="font-size:11px;color:var(--muted2)">${days}d ago</span>
+                </div>
+                <div class="hbar ${cls}"><div class="hfill" style="width:${pct}%"></div></div>
+              </div>`;
+          }).join('');
+        }
+      } catch (_) {}
+    }
+
+    /* ─── SKILLS ─── */
+    function toggleSkillForm() {
+      const f = document.getElementById('skill-form');
+      f.style.display = f.style.display === 'none' ? 'block' : 'none';
+    }
+    async function addSkill() {
+      const name     = document.getElementById('sk-name').value.trim();
+      const category = document.getElementById('sk-cat').value.trim();
+      const decayDays = parseInt(document.getElementById('sk-decay').value);
+      if (!name)           { toast('Skill name is required', 'error'); return; }
+      if (!category)       { toast('Category is required', 'error'); return; }
+      if (!decayDays || decayDays < 1) { toast('Decay days must be at least 1', 'error'); return; }
+      try {
+        await POST('/api/v1/skills', { name, category, decayDays });
+        toast('Skill added!', 'success');
+        ['sk-name','sk-cat','sk-decay'].forEach(id => document.getElementById(id).value = '');
+        toggleSkillForm(); loadSkills();
+      } catch (e) { toast(e.message, 'error'); }
+    }
+    async function loadSkills(page = 0) {
+      document.getElementById('skills-grid').innerHTML =
+        '<div class="empty" style="grid-column:1/-1"><div class="loader"></div></div>';
+      try {
+        const data  = await GET(`/api/v1/skills?page=${page}&size=10`);
+        const items = data.content || data || [];
+        const total = data.totalPages || 1;
+        if (!items.length) {
+          document.getElementById('skills-grid').innerHTML =
+            '<div class="empty" style="grid-column:1/-1"><div class="ei">◈</div><div class="et">No skills yet.</div></div>';
+        } else {
+          document.getElementById('skills-grid').innerHTML = items.map(s => `
+            <div class="card" style="transition:border-color var(--tr)"
+              onmouseover="this.style.borderColor='var(--muted)'"
+              onmouseout="this.style.borderColor='var(--border)'">
+              <div style="font-family:var(--font-h);font-size:16px;font-weight:700">
+                ${s.name||s.skillName||'—'}
+              </div>
+              <div style="font-size:11.5px;color:var(--muted2);margin-top:4px">${s.category||''}</div>
+              ${s.description?`<div style="font-size:12px;color:var(--muted);margin-top:8px">${s.description}</div>`:''}
+              <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap">
+                ${s.level?`<span class="badge bt">${s.level}</span>`:''}
+                ${s.totalSessions?`<span class="badge bx">${s.totalSessions} sessions</span>`:''}
+              </div>
+            </div>`).join('');
+        }
+        renderPag('skills-pag', page, total, loadSkills);
+      } catch (e) { toast('Skills: ' + e.message, 'error'); }
+    }
+
+    /* ─── PRACTICE ─── */
+    // Populate skill dropdown when practice page loads
+    async function loadSkillDropdown() {
+      try {
+        const data  = await GET('/api/v1/skills?page=0&size=100');
+        const items = data.content || data || [];
+        const sel   = document.getElementById('pr-skill-id');
+        sel.innerHTML = '<option value="">— Select a skill —</option>';
+        items.forEach(s => {
+          const opt = document.createElement('option');
+          opt.value       = s.id || s.skillId;
+          opt.textContent = s.name || s.skillName;
+          sel.appendChild(opt);
+        });
+      } catch (_) {}
+      // Default date to today
+      document.getElementById('pr-date').value = new Date().toISOString().split('T')[0];
+    }
+
+    async function logPractice() {
+      const skillId       = parseInt(document.getElementById('pr-skill-id').value);
+      const practiceDate  = document.getElementById('pr-date').value;
+      const effortLevel   = document.getElementById('pr-effort').value;
+      const durationMinutes = parseInt(document.getElementById('pr-dur').value);
+
+      if (!skillId)         { toast('Please select a skill', 'error'); return; }
+      if (!practiceDate)    { toast('Practice date is required', 'error'); return; }
+      if (!effortLevel)     { toast('Effort level is required', 'error'); return; }
+      if (!durationMinutes || durationMinutes < 1) { toast('Duration must be at least 1 minute', 'error'); return; }
+
+      try {
+        await POST('/api/v1/practice/log', {
+          skillId,
+          practiceDate,
+          effortLevel,
+          durationMinutes,
+          notes: document.getElementById('pr-notes').value.trim(),
+        });
+        toast('Practice logged!', 'success');
+        document.getElementById('pr-dur').value   = '';
+        document.getElementById('pr-notes').value = '';
+        loadPractices();
+      } catch (e) { toast(e.message, 'error'); }
+    }
+    async function loadPractices(page = 0) {
+      const tb = document.getElementById('pr-tbody');
+      tb.innerHTML = '<tr><td colspan="4"><div class="empty"><div class="loader"></div></div></td></tr>';
+      try {
+        const data  = await GET(`/api/v1/practice/my?page=${page}&size=10`);
+        const rows  = data.content || data || [];
+        const total = data.totalPages || 1;
+        if (!rows.length) {
+          tb.innerHTML = '<tr><td colspan="4"><div class="empty"><div class="ei">◎</div><div class="et">No sessions yet</div></div></td></tr>';
+        } else {
+          tb.innerHTML = rows.map(r => `
+            <tr>
+              <td><strong>${r.skillName || r.skill?.name || '—'}</strong></td>
+              <td>${effortBadge(r.effortLevel || r.effortIntensity)}</td>
+              <td style="color:var(--muted2)">${r.durationMinutes ? r.durationMinutes + 'm' : '—'}</td>
+              <td style="color:var(--muted)">${fmtDate(r.practiceDate || r.createdAt || r.date)}</td>
+            </tr>`).join('');
+        }
+        renderPag('pr-pag', page, total, loadPractices);
+      } catch (e) { toast('History: ' + e.message, 'error'); }
+    }
+
+    /* ─── TIMER ─── */
+    let tmrIv = null, tmrSec = 0, tmrOn = false;
+    function tmrFmt() {
+      const h = String(Math.floor(tmrSec/3600)).padStart(2,'0');
+      const m = String(Math.floor((tmrSec%3600)/60)).padStart(2,'0');
+      const s = String(tmrSec%60).padStart(2,'0');
+      document.getElementById('tmr-disp').textContent = `${h}:${m}:${s}`;
+    }
+    function timerStart() {
+      if (tmrOn) return; tmrOn = true;
+      tmrIv = setInterval(() => { tmrSec++; tmrFmt(); }, 1000);
+      document.getElementById('btn-start').disabled = true;
+      document.getElementById('btn-pause').disabled = false;
+      document.getElementById('btn-stop').disabled  = false;
+    }
+    function timerPause() {
+      if (!tmrOn) return; tmrOn = false; clearInterval(tmrIv);
+      document.getElementById('btn-start').disabled = false;
+      document.getElementById('btn-pause').disabled = true;
+    }
+    function timerStop() {
+      timerPause();
+      const mins = Math.ceil(tmrSec / 60);
+      if (mins > 0) {
+        document.getElementById('pr-dur').value = mins;
+        toast(`${mins}m recorded — select skill, effort & submit`, 'info');
+      }
+      tmrSec = 0; tmrFmt();
+      document.getElementById('btn-start').disabled = false;
+      document.getElementById('btn-stop').disabled  = true;
+      document.getElementById('btn-pause').disabled = true;
+    }
+
+    /* ─── SKILL HEALTH ─── */
+    async function loadSkillHealth() {
+      document.getElementById('health-grid').innerHTML =
+        '<div class="empty" style="grid-column:1/-1"><div class="loader"></div></div>';
+      try {
+        const data = await GET('/api/v1/skills/health');
+        if (!data.length) {
+          document.getElementById('health-grid').innerHTML =
+            '<div class="empty" style="grid-column:1/-1"><div class="ei">◐</div><div class="et">All healthy!</div></div>';
+          return;
+        }
+        document.getElementById('health-grid').innerHTML = data.map(s => {
+          const inactive = s.daysInactive ?? 0;
+          const streak   = s.currentStreak ?? 0;
+          const status   = (s.status || 'ACTIVE').toUpperCase();
+          // Color by status
+          const statusMap = { ACTIVE:'bt', AT_RISK:'ba', DECAYED:'br' };
+          const sb = statusMap[status] || 'bx';
+          // Health bar based on daysInactive (0 days = 100%, 10+ days = 0%)
+          const pct = Math.max(5, 100 - inactive * 10);
+          const cls = pct > 60 ? 'hgood' : pct > 30 ? 'hwarn' : 'hbad';
+          return `
+            <div class="card">
+              <div class="row-b">
+                <div style="font-family:var(--font-h);font-size:15px;font-weight:700">
+                  ${s.skillName || '—'}
+                </div>
+                <span class="badge ${sb}">${status.replace('_',' ')}</span>
+              </div>
+              <div style="display:flex;gap:16px;margin-top:10px;font-size:12px;color:var(--muted2)">
+                <span>🔥 Streak: <strong style="color:var(--accent)">${streak}</strong> days</span>
+                <span>💤 Inactive: <strong style="color:${inactive>7?'var(--danger)':inactive>3?'var(--accent3)':'var(--accent2)'}">${inactive}</strong> days</span>
+              </div>
+              <div class="hbar ${cls}"><div class="hfill" style="width:${pct}%"></div></div>
+              <div style="font-size:10.5px;color:var(--muted);margin-top:5px">
+                ${pct<30?'⚠ Urgent — practice now':pct<60?'↻ Practice soon':'✓ Good shape'}
+              </div>
+            </div>`;
+        }).join('');
+      } catch (e) { toast('Health: ' + e.message, 'error'); }
+    }
+
+    /* ─── PROGRESS ─── */
+    async function loadProgress() {
+      setLoading('prog-skills'); setLoading('prog-summary');
+      try {
+        const d = await GET('/api/v1/progress/me');
+
+        // Skill overview card
+        const skillRows = [
+          { label: 'Total Skills',    val: d.totalSkills,            color: 'var(--accent)'  },
+          { label: 'Active Skills',   val: d.activeSkills,           color: 'var(--accent2)' },
+          { label: 'At Risk Skills',  val: d.atRiskSkills,           color: 'var(--accent3)' },
+          { label: 'Decayed Skills',  val: d.decayedSkills,          color: 'var(--danger)'  },
+        ].filter(r => r.val !== undefined);
+
+        // Practice summary card
+        const summRows = [
+          { label: 'Total Practice Time', val: d.totalPracticeMinutes !== undefined ? d.totalPracticeMinutes + ' min' : undefined, color: 'var(--accent)'  },
+          { label: 'Last Practice',       val: d.lastPracticeDate ? fmtDate(d.lastPracticeDate) : undefined,                       color: 'var(--accent2)' },
+          { label: 'Consistency Score',   val: d.consistencyScore !== undefined ? d.consistencyScore + '%' : undefined,            color: 'var(--accent3)' },
+        ].filter(r => r.val !== undefined);
+
+        function renderRows(elId, rows) {
+          if (!rows.length) {
+            setEmpty(elId, '—', 'No data available');
+            return;
+          }
+          document.getElementById(elId).innerHTML = rows.map(r => `
+            <div class="row-b" style="padding:10px 0;border-bottom:1px solid var(--border)">
+              <span style="font-size:12.5px;color:var(--muted2)">${r.label}</span>
+              <span style="font-family:var(--font-h);font-size:22px;font-weight:800;color:${r.color}">${r.val}</span>
+            </div>`).join('');
+        }
+
+        renderRows('prog-skills',  skillRows);
+        renderRows('prog-summary', summRows);
+      } catch (e) { toast('Progress: ' + e.message, 'error'); }
+    }
+
+    /* ─── YOUTUBE ─── */
+    function extractVid(url) {
+      try { const u = new URL(url); return u.searchParams.get('v') || u.pathname.split('/').pop(); }
+      catch (_) { return url; }
+    }
+    function embedVid(url) {
+      const vid = extractVid(url);
+      document.getElementById('yt-embed-card').style.display = 'block';
+      document.getElementById('yt-iframe').src =
+        `https://www.youtube.com/embed/${vid}?rel=0&modestbranding=1`;
+      if (!document.getElementById('yt-id').value)
+        document.getElementById('yt-id').value = vid;
+    }
+    async function ytLoad() {
+      const url = document.getElementById('yt-url').value.trim();
+      if (!url) { toast('Enter a YouTube URL', 'error'); return; }
+      try {
+        await POST('/api/youtube/video', { youtubeUrl: url });
+        toast('Video saved!', 'success'); embedVid(url);
+      } catch (e) { toast(e.message, 'error'); }
+    }
+    async function ytLoadCurrent() {
+      try {
+        const d = await GET('/api/youtube/current');
+        const url = d.youtubeUrl||d.url||d.videoUrl||'';
+        if (!url) { toast('No current video set', 'info'); return; }
+        document.getElementById('yt-url').value = url;
+        embedVid(url); toast('Current video loaded', 'info');
+      } catch (e) { toast(e.message, 'error'); }
+    }
+    async function ytLogWatch() {
+      const videoId = document.getElementById('yt-id').value.trim();
+      const title   = document.getElementById('yt-title').value.trim();
+      const secs    = parseInt(document.getElementById('yt-secs').value);
+      if (!videoId || !secs) { toast('Video ID and seconds required', 'error'); return; }
+      try {
+        await POST('/api/youtube/watch-time', { videoId, title, watchedSeconds: secs });
+        toast('Watch time logged!', 'success'); loadYtHistory();
+      } catch (e) { toast(e.message, 'error'); }
+    }
+    async function loadYtHistory() {
+      const tb = document.getElementById('yt-tbody');
+      tb.innerHTML = '<tr><td colspan="4"><div class="empty"><div class="loader"></div></div></td></tr>';
+      try {
+        const data = await GET('/api/youtube/history');
+        if (!data.length) {
+          tb.innerHTML = '<tr><td colspan="4"><div class="empty"><div class="ei">▷</div><div class="et">No history yet</div></div></td></tr>';
+        } else {
+          tb.innerHTML = data.map(h => `
+            <tr>
+              <td><strong>${h.title||'—'}</strong></td>
+              <td><code style="font-size:11px;color:var(--muted2)">${h.videoId||h.youtubeVideoId||'—'}</code></td>
+              <td style="color:var(--accent2)">${fmtSec(h.watchedSeconds||h.totalWatchedSeconds||0)}</td>
+              <td style="color:var(--muted)">${fmtDate(h.createdAt||h.date||h.loggedAt)}</td>
+            </tr>`).join('');
+        }
+      } catch (e) { toast('Watch history: ' + e.message, 'error'); }
+    }
+
+    /* ─── PAGINATION ─── */
+    function renderPag(id, cur, total, fn) {
+      const c = document.getElementById(id);
+      if (total <= 1) { c.innerHTML = ''; return; }
+      let h = `<button class="pb" ${cur===0?'disabled':''} onclick="${fn.name}(${cur-1})">‹</button>`;
+      for (let i = 0; i < total; i++) {
+        if (i===0||i===total-1||Math.abs(i-cur)<=1)
+          h += `<button class="pb ${i===cur?'active':''}" onclick="${fn.name}(${i})">${i+1}</button>`;
+        else if (Math.abs(i-cur)===2)
+          h += `<span style="color:var(--muted);padding:0 4px">…</span>`;
+      }
+      h += `<button class="pb" ${cur===total-1?'disabled':''} onclick="${fn.name}(${cur+1})">›</button>`;
+      c.innerHTML = h;
+    }
+
+    /* ─── START ─── */
+    checkAuth();
+</script>
+</body>
+</html>
