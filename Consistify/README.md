@@ -188,8 +188,12 @@ Built with the goal of helping developers and learners maintain consistent skill
 **Consistify** - *Track honestly. Learn consistently. Grow continuously.*
 
 [README.md](README.md)
-![Dashboard.png](docs/images/Dashboard.png)
-![Practicelog.png](docs/images/Practicelog.png)
-![Progress.png](docs/images/Progress.png)
-![Skill health.png](docs/images/Skill%20health.png)
-![Skills.png](docs/images/Skills.png)
+![Dashboard](docs/images/Dashboard.png)
+
+![Practice Log](docs/images/Practicelog.png)
+
+![Progress](docs/images/Progress.png)
+
+![Skill Health](docs/images/Skill-health.png)
+
+![Skills](docs/images/Skills.png)
