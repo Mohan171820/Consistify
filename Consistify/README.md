@@ -171,6 +171,18 @@ cd Consistify
 
 5. Access the application at `http://localhost:8080/login.html`
 
+
+[README.md](README.md)
+![Dashboard](docs/images/Dashboard.png)
+
+![Practice Log](docs/images/Practicelog.png)
+
+![Progress](docs/images/Progress.png)
+
+![Skill Health](docs/images/Skill-health.png)
+
+![Skills](docs/images/Skills.png)
+
 ##  Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
@@ -187,13 +199,3 @@ Built with the goal of helping developers and learners maintain consistent skill
 
 **Consistify** - *Track honestly. Learn consistently. Grow continuously.*
 
-[README.md](README.md)
-![Dashboard](docs/images/Dashboard.png)
-
-![Practice Log](docs/images/Practicelog.png)
-
-![Progress](docs/images/Progress.png)
-
-![Skill Health](docs/images/Skill-health.png)
-
-![Skills](docs/images/Skills.png)
