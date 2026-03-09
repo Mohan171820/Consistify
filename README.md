@@ -169,7 +169,15 @@ cd Consistify
 ./mvnw spring-boot:run
 ```
 
-5. Access the application at `http://localhost:8080`
+5. Access the application at `http://localhost:8080/login.html`
+   
+<img width="1919" height="873" alt="Dashboard" src="https://github.com/user-attachments/assets/340c0d00-a55f-4671-8aaf-208fe894b61f" />
+<img width="1919" height="879" alt="Practicelog" src="https://github.com/user-attachments/assets/3469bf90-429c-4b1f-8f57-7e1af392c0dc" />
+<img width="1919" height="872" alt="Progress" src="https://github.com/user-attachments/assets/9d8f41ab-f912-4f22-825d-03ab21f69c0b" />
+<img width="1919" height="867" alt="Skill-health" src="https://github.com/user-attachments/assets/4529e067-ec89-4d60-a5a6-579a8c8b8ae3" />
+<img width="1919" height="879" alt="Skills" src="https://github.com/user-attachments/assets/a251644a-c95c-4dc0-abc1-02cee8ea78da" />
+
+
 
 ##  Contributing
 
