@@ -16,6 +16,7 @@ public interface PracticeMapper {
 
     // Converts PracticeLogRequest DTO to PracticeSession entity
     @Mapping(target = "id", ignore = true)    // ID is generated automatically by the database
-    @Mapping(target = "skill", ignore = true) // Skill is fetched and set manually in the service layer
+    @Mapping(target = "skill", ignore = true)// Skill is fetched and set manually in the service layer
+    @Mapping(target = "user", ignore = true)
     PracticeSession toEntity(PracticeLogRequest request);
 }

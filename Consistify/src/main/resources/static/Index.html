@@ -186,8 +186,8 @@
         .hbad  .hfill{background:var(--danger)}
 
         /* YOUTUBE */
-        .yt-wrap{position:relative;padding-bottom:56.25%;height:0;border-radius:var(--r);overflow:hidden;background:#000}
-        .yt-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+        .yt-wrap{position:relative;width:100%;aspect-ratio:16/9;border-radius:var(--r);overflow:hidden;background:#000}
+        .yt-wrap iframe{position:absolute!important;top:0!important;left:0!important;width:100%!important;height:100%!important;border:none!important}
 
         /* TIMER */
         .timer-disp{
@@ -365,6 +365,12 @@
                 </div>
                 <div class="card">
                     <div class="card-title">Practice Timer</div>
+                    <div class="fg">
+                        <label>Skill being timed</label>
+                        <select id="tmr-skill-sel">
+                            <option value="">— Select skill —</option>
+                        </select>
+                    </div>
                     <div class="timer-disp" id="tmr-disp">00:00:00</div>
                     <div class="timer-ctrl">
                         <button class="btn btn-p" id="btn-start" onclick="timerStart()">▶ Start</button>
@@ -416,7 +422,7 @@
 
         <!-- YOUTUBE -->
         <div id="page-youtube" class="page">
-            <div class="ph"><h1>YouTube Learning</h1><p>Distraction-free video learning with watch time tracking</p></div>
+            <div class="ph"><h1>YouTube Learning</h1><p>Watch time is tracked automatically while the video plays</p></div>
             <div class="g2 sec">
                 <div class="card">
                     <div class="card-title">Load a Video</div>
@@ -424,28 +430,27 @@
                         <input id="yt-url" placeholder="https://www.youtube.com/watch?v=..."/>
                     </div>
                     <div class="row">
-                        <button class="btn btn-p" onclick="ytLoad()">▷ Load &amp; Save</button>
+                        <button class="btn btn-p" onclick="ytLoad()">▷ Load &amp; Track</button>
                         <button class="btn btn-s" onclick="ytLoadCurrent()">↻ Load Current</button>
                     </div>
                 </div>
                 <div class="card">
-                    <div class="card-title">Log Watch Time</div>
-                    <div class="fg"><label>Video ID</label>
-                        <input id="yt-id" placeholder="e.g. dQw4w9WgXcQ"/>
+                    <div class="card-title">Current Session</div>
+                    <div style="text-align:center;padding:12px 0">
+                        <div id="yt-now-title" style="font-family:var(--font-h);font-size:14px;font-weight:700;margin-bottom:8px;color:var(--muted2)">No video loaded</div>
+                        <div style="font-size:11px;color:var(--muted);margin-bottom:16px">Watch time tracked automatically</div>
+                        <div style="font-family:var(--font-h);font-size:40px;font-weight:800;color:var(--accent)" id="yt-timer-disp">0:00</div>
+                        <div style="font-size:11px;color:var(--muted);margin-top:4px">seconds watched this session</div>
                     </div>
-                    <div class="fg"><label>Title</label>
-                        <input id="yt-title" placeholder="e.g. CS Trees Lecture"/>
-                    </div>
-                    <div class="fg"><label>Seconds Watched</label>
-                        <input id="yt-secs" type="number" min="0" placeholder="e.g. 1800"/>
-                    </div>
-                    <button class="btn btn-p" onclick="ytLogWatch()">Log Watch Time</button>
+                    <button class="btn btn-p" style="width:100%;justify-content:center" onclick="ytSaveTime()" id="yt-save-btn" disabled>
+                        ↑ Save Watch Time
+                    </button>
                 </div>
             </div>
             <div class="card sec" id="yt-embed-card" style="display:none">
                 <div class="card-title">Now Watching</div>
-                <div class="yt-wrap">
-                    <iframe id="yt-iframe" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+                <div class="yt-wrap" id="yt-player-outer">
+                    <div id="yt-player-div" style="position:absolute;top:0;left:0;width:100%;height:100%"></div>
                 </div>
             </div>
             <div class="card">
@@ -534,12 +539,16 @@
       if (r.status === 401) { location.replace('/login.html'); throw new Error('Session expired'); }
       if (!r.ok) {
         let msg = `HTTP ${r.status}`;
-        try { const e = await r.json(); msg = e.message || e.error || msg; } catch (_) {}
+        try {
+          const txt = await r.text();
+          try { const e = JSON.parse(txt); msg = e.message || e.error || (typeof e==='string'?e:msg); }
+          catch (_) { if (txt) msg = txt; }
+        } catch (_) {}
         throw new Error(msg);
       }
       const ct = r.headers.get('content-type') || '';
       if (ct.includes('application/json')) return r.json();
-      return r.text();
+      return r.text(); // handles "Practice logged successfully" plain text fine
     }
 
     const GET  = path      => api('GET',  path);
@@ -689,16 +698,13 @@
       try {
         const data  = await GET('/api/v1/skills?page=0&size=100');
         const items = data.content || data || [];
-        const sel   = document.getElementById('pr-skill-id');
-        sel.innerHTML = '<option value="">— Select a skill —</option>';
-        items.forEach(s => {
-          const opt = document.createElement('option');
-          opt.value       = s.id || s.skillId;
-          opt.textContent = s.name || s.skillName;
-          sel.appendChild(opt);
-        });
+        const blank = '<option value="">— Select a skill —</option>';
+        const opts  = items.map(s =>
+          `<option value="${s.id || s.skillId}">${s.name || s.skillName}</option>`
+        ).join('');
+        document.getElementById('pr-skill-id').innerHTML  = blank + opts;
+        document.getElementById('tmr-skill-sel').innerHTML = '<option value="">— Select skill —</option>' + opts;
       } catch (_) {}
-      // Default date to today
       document.getElementById('pr-date').value = new Date().toISOString().split('T')[0];
     }
 
@@ -771,10 +777,16 @@
     }
     function timerStop() {
       timerPause();
-      const mins = Math.ceil(tmrSec / 60);
+      const mins    = Math.ceil(tmrSec / 60);
+      const skillId = document.getElementById('tmr-skill-sel').value;
       if (mins > 0) {
         document.getElementById('pr-dur').value = mins;
-        toast(`${mins}m recorded — select skill, effort & submit`, 'info');
+        // Sync skill selection to log form
+        if (skillId) document.getElementById('pr-skill-id').value = skillId;
+        const skillName = skillId
+          ? document.getElementById('tmr-skill-sel').options[document.getElementById('tmr-skill-sel').selectedIndex].text
+          : 'the skill';
+        toast(`${mins}m recorded for ${skillName} — set effort & submit`, 'info');
       }
       tmrSec = 0; tmrFmt();
       document.getElementById('btn-start').disabled = false;
@@ -862,46 +874,143 @@
       } catch (e) { toast('Progress: ' + e.message, 'error'); }
     }
 
-    /* ─── YOUTUBE ─── */
+    /* ─── YOUTUBE — IFrame API auto-tracking ─── */
+    let ytPlayer = null, ytCurrentVid = '', ytCurrentTitle = '';
+    let ytWatchSec = 0, ytTrackIv = null;
+
+    // YouTube IFrame API callback — called automatically by the API script
+    window.onYouTubeIframeAPIReady = function() { /* ready, player created on demand */ };
+
     function extractVid(url) {
-      try { const u = new URL(url); return u.searchParams.get('v') || u.pathname.split('/').pop(); }
-      catch (_) { return url; }
+      try {
+        const u = new URL(url);
+        return u.searchParams.get('v') || u.pathname.replace('/','');
+      } catch (_) { return url.trim(); }
     }
-    function embedVid(url) {
-      const vid = extractVid(url);
+
+    function ytFmtTime(s) {
+      const m = Math.floor(s / 60), sec = s % 60;
+      return `${m}:${String(sec).padStart(2,'0')}`;
+    }
+
+    function ytCreatePlayer(videoId, title) {
+      ytCurrentVid   = videoId;
+      ytCurrentTitle = title || videoId;
+      ytWatchSec     = 0;
+      document.getElementById('yt-now-title').textContent = ytCurrentTitle;
+      document.getElementById('yt-timer-disp').textContent = '0:00';
+      document.getElementById('yt-save-btn').disabled = false;
       document.getElementById('yt-embed-card').style.display = 'block';
-      document.getElementById('yt-iframe').src =
-        `https://www.youtube.com/embed/${vid}?rel=0&modestbranding=1`;
-      if (!document.getElementById('yt-id').value)
-        document.getElementById('yt-id').value = vid;
+
+      // Reset player div — YT API will inject an iframe inside it
+      const playerDiv = document.getElementById('yt-player-div');
+      playerDiv.innerHTML = '';
+      // Create fresh target element
+      const target = document.createElement('div');
+      target.id = 'yt-player-elem';
+      target.style.cssText = 'width:100%;height:100%';
+      playerDiv.appendChild(target);
+
+      if (ytTrackIv) clearInterval(ytTrackIv);
+
+      if (window.YT && window.YT.Player) {
+        _buildPlayer(videoId);
+      } else {
+        // Load API script once
+        if (!document.getElementById('yt-api-script')) {
+          const s = document.createElement('script');
+          s.id  = 'yt-api-script';
+          s.src = 'https://www.youtube.com/iframe_api';
+          document.head.appendChild(s);
+        }
+        // Poll until ready
+        const wait = setInterval(() => {
+          if (window.YT && window.YT.Player) { clearInterval(wait); _buildPlayer(videoId); }
+        }, 200);
+      }
     }
+
+    function _buildPlayer(videoId) {
+      // YT.Player replaces the target element with an iframe.
+      // The outer .yt-wrap (aspect-ratio 16/9) constrains the size.
+      // yt-player-div sits absolutely inside it at 100%/100%.
+      // We pass numeric px dimensions based on the outer wrapper's rendered size.
+      const outer = document.getElementById('yt-player-outer');
+      const w = outer.offsetWidth || 640;
+      const h = Math.round(w * 9 / 16);
+
+      ytPlayer = new YT.Player('yt-player-elem', {
+        height: h,
+        width: w,
+        videoId,
+        playerVars: { rel: 0, modestbranding: 1, autoplay: 1 },
+        events: {
+          onReady: (event) => {
+            // Force iframe to fill container regardless of YT inline styles
+            const iframe = event.target.getIframe();
+            if (iframe) {
+              iframe.setAttribute('style',
+                'position:absolute;top:0;left:0;width:100%;height:100%;border:none');
+            }
+          },
+          onStateChange: (e) => {
+            if (e.data === YT.PlayerState.PLAYING) {
+              if (ytTrackIv) clearInterval(ytTrackIv);
+              ytTrackIv = setInterval(() => {
+                ytWatchSec++;
+                document.getElementById('yt-timer-disp').textContent = ytFmtTime(ytWatchSec);
+              }, 1000);
+            } else {
+              clearInterval(ytTrackIv);
+            }
+          }
+        }
+      });
+    }
+
     async function ytLoad() {
       const url = document.getElementById('yt-url').value.trim();
       if (!url) { toast('Enter a YouTube URL', 'error'); return; }
+      const vid = extractVid(url);
+      if (!vid) { toast('Could not extract video ID', 'error'); return; }
       try {
         await POST('/api/youtube/video', { youtubeUrl: url });
-        toast('Video saved!', 'success'); embedVid(url);
-      } catch (e) { toast(e.message, 'error'); }
+        toast('Video loaded & saved!', 'success');
+        ytCreatePlayer(vid, vid);
+      } catch (e) {
+        // If save fails, still load the player
+        toast('Saved failed but loading anyway', 'info');
+        ytCreatePlayer(vid, vid);
+      }
     }
+
     async function ytLoadCurrent() {
       try {
         const d = await GET('/api/youtube/current');
-        const url = d.youtubeUrl||d.url||d.videoUrl||'';
-        if (!url) { toast('No current video set', 'info'); return; }
+        const url = d.youtubeUrl || d.url || d.videoUrl || '';
+        if (!url) { toast('No current video saved', 'info'); return; }
         document.getElementById('yt-url').value = url;
-        embedVid(url); toast('Current video loaded', 'info');
+        const vid = extractVid(url);
+        ytCreatePlayer(vid, vid);
+        toast('Current video loaded', 'info');
       } catch (e) { toast(e.message, 'error'); }
     }
-    async function ytLogWatch() {
-      const videoId = document.getElementById('yt-id').value.trim();
-      const title   = document.getElementById('yt-title').value.trim();
-      const secs    = parseInt(document.getElementById('yt-secs').value);
-      if (!videoId || !secs) { toast('Video ID and seconds required', 'error'); return; }
+
+    async function ytSaveTime() {
+      if (!ytCurrentVid || ytWatchSec < 1) { toast('No watch time to save yet', 'info'); return; }
       try {
-        await POST('/api/youtube/watch-time', { videoId, title, watchedSeconds: secs });
-        toast('Watch time logged!', 'success'); loadYtHistory();
+        await POST('/api/youtube/watch-time', {
+          videoId       : ytCurrentVid,
+          title         : ytCurrentTitle,
+          watchedSeconds: ytWatchSec,
+        });
+        toast(`Saved ${ytFmtTime(ytWatchSec)} watch time!`, 'success');
+        ytWatchSec = 0;
+        document.getElementById('yt-timer-disp').textContent = '0:00';
+        loadYtHistory();
       } catch (e) { toast(e.message, 'error'); }
     }
+
     async function loadYtHistory() {
       const tb = document.getElementById('yt-tbody');
       tb.innerHTML = '<tr><td colspan="4"><div class="empty"><div class="loader"></div></div></td></tr>';
@@ -920,6 +1029,7 @@
         }
       } catch (e) { toast('Watch history: ' + e.message, 'error'); }
     }
+
 
     /* ─── PAGINATION ─── */
     function renderPag(id, cur, total, fn) {

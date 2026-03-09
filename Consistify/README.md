@@ -169,7 +169,7 @@ cd Consistify
 ./mvnw spring-boot:run
 ```
 
-5. Access the application at `http://localhost:8080`
+5. Access the application at `http://localhost:8080/login.html`
 
 ##  Contributing
 
@@ -186,3 +186,9 @@ Built with the goal of helping developers and learners maintain consistent skill
 ---
 
 **Consistify** - *Track honestly. Learn consistently. Grow continuously.*
+
+![Dashboard.png](docs/images/Dashboard.png)
+![Practicelog.png](docs/images/Practicelog.png)
+![Progress.png](docs/images/Progress.png)
+![Skill health.png](docs/images/Skill%20health.png)
+![Skills.png](docs/images/Skills.png)
