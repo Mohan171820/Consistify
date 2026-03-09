@@ -187,6 +187,7 @@ Built with the goal of helping developers and learners maintain consistent skill
 
 **Consistify** - *Track honestly. Learn consistently. Grow continuously.*
 
+[README.md](README.md)
 ![Dashboard.png](docs/images/Dashboard.png)
 ![Practicelog.png](docs/images/Practicelog.png)
 ![Progress.png](docs/images/Progress.png)
