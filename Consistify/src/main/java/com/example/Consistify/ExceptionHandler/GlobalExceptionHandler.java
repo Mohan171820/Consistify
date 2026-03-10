@@ -40,8 +40,9 @@ public class GlobalExceptionHandler {
     // Handle validation errors for request bodies
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleGeneric(Exception ex) {
+        ex.printStackTrace(); // force print to console
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ApiErrorResponse(500, "Something went wrong"));
+                .body(new ApiErrorResponse(500, ex.getMessage())); // return real message
     }
 }
