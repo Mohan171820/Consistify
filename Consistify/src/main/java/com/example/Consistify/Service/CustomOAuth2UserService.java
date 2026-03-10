@@ -24,18 +24,27 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String email = oAuth2User.getAttribute("email");
         String name = oAuth2User.getAttribute("name");
 
-        // Fetch or create user
+        System.out.println("GOOGLE LOGIN EMAIL: " + email);
+
+        if (email == null) {
+            throw new RuntimeException("Email not received from Google OAuth");
+        }
+
+        email = email.trim().toLowerCase();
+
         User user = userRepository.findByEmail(email)
                 .orElseGet(() -> {
+                    System.out.println("Creating new user: " + email);
+
                     User newUser = User.builder()
                             .email(email)
                             .name(name)
                             .role(Role.USER)
                             .password(null)
                             .build();
+
                     return userRepository.save(newUser);
                 });
 
         return oAuth2User;
     }
-}
