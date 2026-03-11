@@ -9,7 +9,6 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
@@ -21,20 +20,23 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        String email = oAuth2User.getAttribute("email");
+        String email = oAuth2User.<String>getAttribute("email").trim().toLowerCase();
         String name = oAuth2User.getAttribute("name");
 
-        // Fetch or create user
-        User user = userRepository.findByEmail(email)
-                .orElseGet(() -> {
-                    User newUser = User.builder()
-                            .email(email)
-                            .name(name)
-                            .role(Role.USER)
-                            .password(null)
-                            .build();
-                    return userRepository.save(newUser);
-                });
+        try {
+            userRepository.findByEmail(email)
+                    .orElseGet(() -> userRepository.save(
+                            User.builder()
+                                    .email(email)
+                                    .name(name)
+                                    .role(Role.USER)
+                                    .password(null)
+                                    .build()
+                    ));
+        } catch (Exception e) {
+            System.err.println("CRITICAL: Failed to save user " + email + " — " + e.getMessage());
+            e.printStackTrace();
+        }
 
         return oAuth2User;
     }
