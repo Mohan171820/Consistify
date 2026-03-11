@@ -67,28 +67,23 @@ public class PracticeLoggingService {
     }
 
     // ---------------- GET MY PRACTICES (PAGINATED) ----------------
+    @Transactional
     public Page<PracticeResponseDTO> getMyPracticeSessions(Pageable pageable) {
-
-        // Get current users email from security context and fetch user entity
         String email = SecurityUtil.getCurrentUserEmail();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Fetch paginated practice sessions for the user and map them to response DTOs
         return practiceRepository
                 .findByUser(user, pageable)
                 .map(practiceMapper::toResponseDTO);
-
     }
     // ---------------- GET MY PRACTICES FOR GRAPHQL (ALL) ----------------
+    @Transactional
     public List<PracticeResponseDTO> getMyPracticeSessionsForGraphQL() {
-
-        // Get current users email from security context and fetch user entity
         String email = SecurityUtil.getCurrentUserEmail();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Fetch all practice sessions for the user, ordered by practice date descending, and map them to response DTOs
         return practiceRepository
                 .findTopBySkill_UserOrderByPracticeDateDesc(user)
                 .stream()

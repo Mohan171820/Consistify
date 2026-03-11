@@ -5,34 +5,32 @@ import com.example.Consistify.Entity.YoutubeDailyWatch;
 import com.example.Consistify.Entity.YoutubeWatchHistory;
 import com.example.Consistify.Repo.YoutubeDailyWatchRepository;
 import com.example.Consistify.Repo.YoutubeHistoryRepository;
+import com.example.Consistify.Repo.UserRepository;
+import com.example.Consistify.Entity.User;
+import com.example.Consistify.util.SecurityUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class YoutubeWatchTimeService {
 
     private final YoutubeDailyWatchRepository dailyRepo;
     private final YoutubeHistoryRepository historyRepo;
+    private final UserRepository userRepository;
 
-    public YoutubeWatchTimeService(
-            YoutubeDailyWatchRepository dailyRepo,
-            YoutubeHistoryRepository historyRepo) {
-        this.dailyRepo = dailyRepo;
-        this.historyRepo = historyRepo;
-    }
-
-    // This method is called whenever watch time is sent from the frontend
-    // It updates both daily total watch time and per-video watch history
     public void addWatchTime(String videoId, String title, int seconds) {
 
-        Long userId = 1L; // temporary user (will be dynamic later)
+        String email = SecurityUtil.getCurrentUserEmail();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Long userId = user.getId();
         LocalDate today = LocalDate.now();
 
-        // ---------- DAILY TOTAL ----------
-        // Get today's watch record for the user
-        // If not present, create a new daily record
         YoutubeDailyWatch daily =
                 dailyRepo.findByUserIdAndWatchDate(userId, today)
                         .orElseGet(() -> {
@@ -43,13 +41,9 @@ public class YoutubeWatchTimeService {
                             return d;
                         });
 
-        // Add the new watched seconds to today's total
         daily.setWatchedSeconds(daily.getWatchedSeconds() + seconds);
         dailyRepo.save(daily);
 
-        // ---------- HISTORY PER VIDEO ----------
-        // Get watch history for this specific video
-        // If the video was not watched before, create a new history record
         YoutubeWatchHistory history =
                 historyRepo.findByUserIdAndVideoId(userId, videoId)
                         .orElseGet(() -> {
@@ -61,18 +55,17 @@ public class YoutubeWatchTimeService {
                             return h;
                         });
 
-        // Update total watch time and last watched timestamp for the video
         history.setWatchedSeconds(history.getWatchedSeconds() + seconds);
         history.setLastWatchedAt(LocalDateTime.now());
-
         historyRepo.save(history);
     }
 
-    // This method is used to fetch the watch history of the user
-    // Videos are returned in descending order of last watched time
     public List<YoutubeHistoryResponse> getHistory() {
 
-        Long userId = 1L; // temporary user
+        String email = SecurityUtil.getCurrentUserEmail();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Long userId = user.getId();
 
         return historyRepo.findAllByUserIdOrderByLastWatchedAtDesc(userId)
                 .stream()
