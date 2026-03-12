@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Consistify</title>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
     <style>
         :root{
           --bg:#0d0f12;--surface:#13161c;--card:#191d26;--border:#242933;
@@ -271,36 +272,71 @@
                 <h1>Dashboard</h1>
                 <p id="dash-date"></p>
             </div>
+            <!-- STAT CARDS -->
             <div class="g4 sec">
-                <div class="stat c-green">
+                <div class="stat c-green" style="position:relative;overflow:hidden">
+                    <div style="position:absolute;right:-10px;top:-10px;font-size:60px;opacity:.06">◈</div>
                     <div class="stat-lbl">Total Skills</div>
                     <div class="stat-val" id="d-skills">—</div>
                     <div class="stat-sub">being tracked</div>
                 </div>
-                <div class="stat c-teal">
+                <div class="stat c-teal" style="position:relative;overflow:hidden">
+                    <div style="position:absolute;right:-10px;top:-10px;font-size:60px;opacity:.06">✓</div>
                     <div class="stat-lbl">Active Skills</div>
                     <div class="stat-val" id="d-active">—</div>
                     <div class="stat-sub">practiced recently</div>
                 </div>
-                <div class="stat c-amber">
+                <div class="stat c-amber" style="position:relative;overflow:hidden">
+                    <div style="position:absolute;right:-10px;top:-10px;font-size:60px;opacity:.06">⚡</div>
                     <div class="stat-lbl">At Risk</div>
                     <div class="stat-val" id="d-atrisk">—</div>
                     <div class="stat-sub">need practice</div>
                 </div>
-                <div class="stat c-red">
+                <div class="stat c-red" style="position:relative;overflow:hidden">
+                    <div style="position:absolute;right:-10px;top:-10px;font-size:60px;opacity:.06">↓</div>
                     <div class="stat-lbl">Decayed</div>
                     <div class="stat-val" id="d-decayed">—</div>
                     <div class="stat-sub">skills lost</div>
                 </div>
             </div>
+
+            <!-- CHARTS ROW -->
+            <div class="g2 sec">
+                <!-- Donut Chart: Skill Status Breakdown -->
+                <div class="card">
+                    <div class="card-title">Skill Status Breakdown</div>
+                    <div style="position:relative;height:220px;display:flex;align-items:center;justify-content:center">
+                        <canvas id="chart-donut"></canvas>
+                        <div id="donut-center" style="position:absolute;text-align:center;pointer-events:none">
+                            <div style="font-family:var(--font-h);font-size:28px;font-weight:800;color:var(--accent)" id="donut-total">—</div>
+                            <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Total</div>
+                        </div>
+                    </div>
+                    <div style="display:flex;gap:16px;justify-content:center;margin-top:12px;flex-wrap:wrap" id="donut-legend"></div>
+                </div>
+
+                <!-- Bar Chart: Practice Minutes per Day -->
+                <div class="card">
+                    <div class="card-title">Practice Minutes — Last 7 Sessions</div>
+                    <div style="position:relative;height:220px">
+                        <canvas id="chart-bar"></canvas>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;margin-top:8px">
+                        <span style="font-size:10px;color:var(--muted)">Each bar = one session</span>
+                        <span style="font-size:10px;color:var(--accent)" id="bar-total-min"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOTTOM ROW: Recent + Streak Leaderboard -->
             <div class="g2">
                 <div class="card">
                     <div class="card-title">Recent Practice</div>
                     <div id="d-recent"><div class="empty"><div class="loader"></div></div></div>
                 </div>
                 <div class="card">
-                    <div class="card-title">Skill Health Snapshot</div>
-                    <div id="d-health"><div class="empty"><div class="loader"></div></div></div>
+                    <div class="card-title">🔥 Streak Leaderboard</div>
+                    <div id="d-streaks"><div class="empty"><div class="loader"></div></div></div>
                 </div>
             </div>
         </div>
@@ -591,52 +627,178 @@
     document.getElementById('dash-date').textContent =
       new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
 
+    let _donutChart = null, _barChart = null;
+
     async function loadDashboard() {
+      /* --- STAT CARDS --- */
+      let dashData = {};
       try {
-        const d = await GET('/api/v1/dashboard');
-        document.getElementById('d-skills').textContent  = d.totalSkills  ?? '—';
-        document.getElementById('d-active').textContent  = d.activeSkills ?? '—';
-        document.getElementById('d-atrisk').textContent  = d.atRiskSkills ?? '—';
-        document.getElementById('d-decayed').textContent = d.decayedSkills ?? '—';
+        dashData = await GET('/api/v1/dashboard');
+        document.getElementById('d-skills').textContent  = dashData.totalSkills  ?? '—';
+        document.getElementById('d-active').textContent  = dashData.activeSkills ?? '—';
+        document.getElementById('d-atrisk').textContent  = dashData.atRiskSkills ?? '—';
+        document.getElementById('d-decayed').textContent = dashData.decayedSkills ?? '—';
       } catch (e) { toast('Dashboard: ' + e.message, 'error'); }
 
+      /* --- DONUT CHART: Skill Status --- */
       try {
-        const p = await GET('/api/v1/practice/my?size=5&page=0');
-        const rows = (p.content || p || []).slice(0, 5);
-        if (!rows.length) { setEmpty('d-recent','◎','No sessions yet'); }
+        const active  = dashData.activeSkills  || 0;
+        const atRisk  = dashData.atRiskSkills  || 0;
+        const decayed = dashData.decayedSkills || 0;
+        const total   = dashData.totalSkills   || 0;
+        document.getElementById('donut-total').textContent = total;
+
+        const donutCtx = document.getElementById('chart-donut').getContext('2d');
+        if (_donutChart) _donutChart.destroy();
+        _donutChart = new Chart(donutCtx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Active', 'At Risk', 'Decayed'],
+            datasets: [{
+              data: [active, atRisk, decayed],
+              backgroundColor: ['#3bffa0', '#ffb84d', '#ff5c5c'],
+              borderColor: '#191d26',
+              borderWidth: 3,
+              hoverOffset: 8,
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '72%',
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: ctx => ` ${ctx.label}: ${ctx.parsed} skills`
+                }
+              }
+            }
+          }
+        });
+
+        /* Legend */
+        const legendColors = ['#3bffa0','#ffb84d','#ff5c5c'];
+        const legendLabels = ['Active','At Risk','Decayed'];
+        const legendVals   = [active, atRisk, decayed];
+        document.getElementById('donut-legend').innerHTML = legendLabels.map((l,i) => `
+          <div style="display:flex;align-items:center;gap:6px;font-size:11px">
+            <span style="width:10px;height:10px;border-radius:50%;background:${legendColors[i]};flex-shrink:0"></span>
+            <span style="color:var(--muted2)">${l}</span>
+            <span style="color:${legendColors[i]};font-family:var(--font-h);font-weight:700">${legendVals[i]}</span>
+          </div>`).join('');
+      } catch (_) {}
+
+      /* --- BAR CHART: Practice Minutes --- */
+      try {
+        const p = await GET('/api/v1/practice/my?size=7&page=0');
+        const rows = (p.content || p || []).slice(0, 7).reverse();
+
+        const labels = rows.map(r => {
+          const d = new Date(r.practiceDate || r.createdAt || r.date);
+          return isNaN(d) ? '?' : d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'});
+        });
+        const durations = rows.map(r => r.durationMinutes || 0);
+        const totalMin  = durations.reduce((a,b)=>a+b,0);
+
+        document.getElementById('bar-total-min').textContent =
+          totalMin ? `Total: ${totalMin}m across ${rows.length} sessions` : '';
+
+        /* Gradient colors by effort */
+        const effortColors = rows.map(r => {
+          const e = r.effortLevel || r.effortIntensity || '';
+          if (e === 'HIGH')   return '#ff5c5c';
+          if (e === 'MEDIUM') return '#ffb84d';
+          return '#3bffa0';
+        });
+
+        const barCtx = document.getElementById('chart-bar').getContext('2d');
+        if (_barChart) _barChart.destroy();
+        _barChart = new Chart(barCtx, {
+          type: 'bar',
+          data: {
+            labels,
+            datasets: [{
+              label: 'Minutes',
+              data: durations,
+              backgroundColor: effortColors,
+              borderRadius: 6,
+              borderSkipped: false,
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: ctx => ` ${ctx.parsed.y} minutes`,
+                  afterLabel: ctx => {
+                    const r = rows[ctx.dataIndex];
+                    const e = r?.effortLevel || r?.effortIntensity || '';
+                    return e ? ` Effort: ${e}` : '';
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                grid: { color: 'rgba(255,255,255,0.04)' },
+                ticks: { color: '#616878', font: { size: 10 } }
+              },
+              y: {
+                grid: { color: 'rgba(255,255,255,0.04)' },
+                ticks: { color: '#616878', font: { size: 10 } },
+                beginAtZero: true
+              }
+            }
+          }
+        });
+
+        /* Recent practice list */
+        const recent = [...rows].reverse().slice(0, 5);
+        if (!recent.length) { setEmpty('d-recent','◎','No sessions yet'); }
         else {
-          document.getElementById('d-recent').innerHTML = rows.map(r => `
+          document.getElementById('d-recent').innerHTML = recent.map(r => `
             <div class="row-b" style="padding:9px 0;border-bottom:1px solid var(--border)">
               <div>
                 <div style="font-size:13px;font-family:var(--font-h);font-weight:600">
                   ${r.skillName||r.skill||'—'}
                 </div>
                 <div style="font-size:11px;color:var(--muted2)">
-                  ${r.platform||''} · ${fmtDate(r.createdAt||r.date)}
+                  ${r.durationMinutes ? r.durationMinutes+'m' : ''} · ${fmtDate(r.practiceDate||r.createdAt||r.date)}
                 </div>
               </div>
-              ${effortBadge(r.effortIntensity||r.effort)}
+              ${effortBadge(r.effortLevel||r.effortIntensity||r.effort)}
             </div>`).join('');
         }
       } catch (_) {}
 
+      /* --- STREAK LEADERBOARD --- */
       try {
         const h = await GET('/api/v1/skills/health');
-        if (!h.length) { setEmpty('d-health','◐','All skills healthy!'); }
+        if (!h.length) { setEmpty('d-streaks','🔥','No streak data yet'); }
         else {
-          document.getElementById('d-health').innerHTML = h.slice(0,5).map(s => {
-            const days = s.decayDays||s.daysSincePractice||0;
-            const pct  = Math.max(5, 100 - days * 12);
-            const cls  = pct > 60 ? 'hgood' : pct > 30 ? 'hwarn' : 'hbad';
+          const sorted = [...h].sort((a,b) => (b.currentStreak||0) - (a.currentStreak||0)).slice(0,5);
+          const maxStreak = sorted[0]?.currentStreak || 1;
+          document.getElementById('d-streaks').innerHTML = sorted.map((s,i) => {
+            const streak = s.currentStreak || 0;
+            const pct    = Math.round((streak / maxStreak) * 100);
+            const medal  = i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
+            const color  = streak > 7 ? 'var(--accent)' : streak > 3 ? 'var(--accent3)' : 'var(--accent2)';
             return `
               <div style="margin-bottom:14px">
-                <div class="row-b">
-                  <span style="font-size:13px;font-family:var(--font-h);font-weight:600">
-                    ${s.skillName||s.name||'—'}
-                  </span>
-                  <span style="font-size:11px;color:var(--muted2)">${days}d ago</span>
+                <div class="row-b" style="margin-bottom:5px">
+                  <div style="display:flex;align-items:center;gap:6px">
+                    <span style="font-size:14px">${medal}</span>
+                    <span style="font-size:13px;font-family:var(--font-h);font-weight:600">${s.skillName||'—'}</span>
+                  </div>
+                  <span style="font-family:var(--font-h);font-size:16px;font-weight:800;color:${color}">${streak}🔥</span>
                 </div>
-                <div class="hbar ${cls}"><div class="hfill" style="width:${pct}%"></div></div>
+                <div style="height:6px;border-radius:3px;background:var(--border);overflow:hidden">
+                  <div style="height:100%;width:${pct}%;background:${color};border-radius:3px;transition:width .6s ease"></div>
+                </div>
               </div>`;
           }).join('');
         }
