@@ -1,201 +1,261 @@
 # Consistify
 
-> A productivity tracking platform designed to help users maintain consistent learning and skill development through honest, distraction-free time tracking.
+> **Track honestly. Learn consistently. Grow continuously.**
 
-##  Overview
+Consistify is a full-stack productivity tracking platform built for developers and self-learners who want **verifiable, honest accountability** over their learning. It enforces one log per skill per day, tracks skill decay automatically, and provides a distraction-free YouTube learning environment — all in one place.
 
-Consistify is a unique productivity application that goes beyond traditional time tracking by focusing on authentic learning progress and skill maintenance. The platform prevents fake logging, tracks skill decay, and provides a distraction-free environment for focused learning.
+🔗 **Live Demo:** [https://consistify-p9jj.onrender.com](https://consistify-p9jj.onrender.com)
 
-## ✨ Key Features
+---
 
-### 1. **Distraction-Free YouTube Learning**
-- Embed YouTube educational videos directly within the platform
-- Automatic time tracking for video-based learning
-- Eliminates distractions from recommendations, comments, and unrelated content
-- Builds a comprehensive learning history based on actual watch time
+## Screenshots
+[README.md](README.md)
+![Dashboard.png](docs/images/Dashboard.png)
+![Practicelog.png](docs/images/Practicelog.png)
+![Progress.png](docs/images/Progress.png)
+![Skill-health.png](docs/images/Skill-health.png)
+![Skills.png](docs/images/Skills.png)
+---
 
-### 2. **Multi-Platform Practice Timer**
-- Integrated timer for popular coding and learning platforms:
-    - LeetCode
-    - HackerRank
-    - CodeChef
-    - Codeforces
-    - And more...
-- Track time spent practicing across different platforms in one centralized location
-- Start/stop/pause functionality with accurate time logging
+## Features
 
-### 3. **Manual Skill Logging**
-- Log daily practice sessions with detailed metadata:
-    - **Skill Name**: What you're learning/practicing
-    - **Skill Level**: Current proficiency
-    - **Effort Intensity**: High, Medium, or Low
-    - **Decay Days**: Track time since last practice
-- One entry per skill per day limit to ensure data integrity
+### 🔐 Authentication
+- **Google OAuth2** — one-click sign-in, account auto-created on first login
+- **Email + Password** — traditional sign-up/sign-in with BCrypt hashing
+- Session-based authentication (no JWT), secure cookies for cross-origin deployment
 
-### 4. **One Entry Per Day Rule**
-- Users can only log once per day for each skill
-- Prevents fake logging and gaming the system
-- Encourages honest self-assessment
-- No editing of past entries to maintain accountability
+### 📊 Dashboard
+- Live stat cards: Total Skills, Active, At Risk, Decayed
+- **Donut chart** — visual skill status breakdown
+- **Bar chart** — last 7 practice sessions by duration, color-coded by effort
+- **Streak leaderboard** — top skills ranked by consecutive streak days
+- Recent practice feed
 
-### 5. **Streak System**
-- Visual streak tracking to maintain motivation
-- Multiple streak types:
-    - Learning streaks (consecutive days of practice)
-    - Logging streaks (daily entry consistency)
-    - Skill maintenance streaks
-- Milestone celebrations and progress visualization
+### 🧠 Skill Management
+- Create skills with a name, category, and decay threshold (in days)
+- Each skill is automatically classified as **ACTIVE**, **AT_RISK**, or **DECAYED**
+- Duplicate skill names blocked per user
 
-### 6. **Skill Decay Tracking**
-- Automatically tracks days since last practice
-- Visual indicators for skills requiring attention
-- Helps prioritize which skills need maintenance
-- Prevents skill degradation through timely reminders
+### 📝 Practice Logging
+- Log daily practice: skill, date, effort level (HIGH / MEDIUM / LOW), duration, notes
+- **One log per skill per day** — enforced at both database and service layer
+- Built-in **practice timer** — stop it to auto-fill the duration field
+- Immutable history — no editing or deleting past entries
 
-### 7. **History & Progress Tracking**
-- Comprehensive history of all logged sessions
-- View progress over time for each skill
-- Analyze learning patterns and productivity trends
-- Immutable history ensures data reliability
+### 💪 Skill Health & Streaks
+- View streak, days inactive, and health status for every skill
+- Health bar shows urgency — green (good), amber (warning), red (critical)
+- Practice reminders built into the health view
 
-##  Upcoming Features
+### 📈 Progress Tracking
+- Total practice time, consistency score, last practice date
+- Skill overview and practice summary in one view
 
-### AI-Powered Insights (Spring AI Integration)
-- Personalized skill recommendations based on decay patterns
-- Optimal learning schedule suggestions
-- Pattern analysis: "You learn best on Tuesday mornings"
-- Intelligent practice reminders
-- Skill progression predictions
+### 🎬 YouTube Learning
+- Paste any YouTube URL — video embeds inside the platform
+- **Automatic watch time tracking** while video plays
+- No sidebar, no recommendations, no distractions
+- Per-user watch history with total time per video
 
-##  Tech Stack
+---
 
-- **Backend**: Java, Spring Boot
-- **Database**: [Your database choice]
-- **API**: GraphQL
-- **Build Tool**: Maven
-- **Future Integration**: Spring AI
+## Tech Stack
 
-##  Project Structure
+| Layer | Technology | Purpose |
+|-------|-----------|---------|
+| Backend | Java 21 + Spring Boot 3.3 | REST API, business logic, session management |
+| Database | PostgreSQL 15 | Persistent storage |
+| ORM | Spring Data JPA + Hibernate | Entity management, repository pattern |
+| Mapper | MapStruct | Compile-time DTO ↔ Entity mapping |
+| Security | Spring Security 6 | OAuth2, form login, BCrypt, session auth |
+| Build | Maven 3.9 | Dependency management, packaging |
+| Frontend | HTML + CSS + Vanilla JS | Single-file SPA served as static resource |
+| Charts | Chart.js 4.4 | Dashboard visualizations |
+| API | REST + GraphQL | REST for CRUD, GraphQL for queries |
+| Deployment | Render (PaaS) | Cloud hosting + managed PostgreSQL |
+| Container | Docker (multi-stage) | Maven build → JRE runtime |
+
+---
+
+## Project Structure
 
 ```
 Consistify/
 ├── src/
 │   ├── main/
-│   │   ├── java/
-│   │   │   └── com.example.Consistify/
-│   │   │       ├── Config/           # Application configuration
-│   │   │       ├── Controller/       # REST/GraphQL controllers
-│   │   │       ├── DTO/             # Data Transfer Objects
-│   │   │       ├── Entity/          # JPA entities
-│   │   │       ├── ExceptionHandler/ # Global exception handling
-│   │   │       ├── GraphQL/         # GraphQL resolvers and schemas
-│   │   │       ├── Mapper/          # Entity-DTO mappers
-│   │   │       ├── Repo/            # Repository interfaces
-│   │   │       ├── Service/         # Business logic
-│   │   │       ├── util/            # Utility classes
-│   │   │       └── ConsistifyApplication.java
+│   │   ├── java/com.example.Consistify/
+│   │   │   ├── Config/            # Security, app configuration
+│   │   │   ├── Controller/        # REST + GraphQL controllers
+│   │   │   ├── DTO/               # Request/Response DTOs
+│   │   │   ├── Entity/            # JPA entities (User, Skill, PracticeSession...)
+│   │   │   ├── ExceptionHandler/  # Global exception handling
+│   │   │   ├── GraphQL/           # GraphQL resolvers and schemas
+│   │   │   ├── Mapper/            # MapStruct mappers
+│   │   │   ├── Repo/              # Spring Data repositories
+│   │   │   ├── Service/           # Business logic
+│   │   │   └── util/              # SecurityUtil, helpers
 │   │   └── resources/
-│   └── test/                        # Unit and integration tests
-├── docs/                            # Documentation
-│   └── images/                      # Documentation images
-├── target/                          # Build output
-├── .gitattributes
-├── .gitignore
-├── HELP.md
-├── mvnw                             # Maven wrapper (Unix)
-├── mvnw.cmd                         # Maven wrapper (Windows)
-├── pom.xml                          # Maven dependencies
+│   │       ├── static/            # index.html + login.html (frontend)
+│   │       ├── graphql/           # schema.graphqls
+│   │       ├── application.properties
+│   │       └── application-prod.properties
+│   └── test/
+├── Dockerfile
+├── pom.xml
 └── README.md
 ```
 
-## 🎓 How It Works
+---
 
-### For YouTube Learning:
-1. Paste a YouTube educational video URL
-2. Video embeds directly in the platform
-3. Start watching in a distraction-free environment
-4. Time is automatically tracked
-5. Session is logged against the relevant skill
+## API Reference
 
-### For Platform Practice:
-1. Select your practice platform (e.g., LeetCode)
-2. Choose the skill you're practicing
-3. Start the timer
-4. Practice on the actual platform
-5. Stop the timer when done
-6. Session is automatically logged
+### Authentication
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/auth/me` | Get current user name and email |
+| POST | `/api/auth/register` | Register with email + password |
+| POST | `/api/auth/login` | Login with email + password |
+| POST | `/logout` | Invalidate session |
+| GET | `/oauth2/authorization/google` | Redirect to Google OAuth |
 
-### For Manual Logging:
-1. Select the skill you practiced
-2. Indicate your current level
-3. Choose effort intensity (High/Medium/Low)
-4. Submit your daily log
-5. Entry is locked and cannot be edited
+### Skills
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/skills?page=&size=` | Paginated skill list |
+| POST | `/api/v1/skills` | Create skill `{ name, category, decayDays }` |
+| GET | `/api/v1/skills/health` | Skill health with streak + status |
 
-##  Philosophy
+### Practice
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/v1/practice/log` | Log session `{ skillId, practiceDate, effortLevel, durationMinutes, notes }` |
+| GET | `/api/v1/practice/my?page=&size=` | Paginated practice history |
 
-Consistify is built on the principle of **authentic productivity tracking**. We believe that:
+### Dashboard & Progress
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/dashboard` | Skill counts + total practice minutes |
+| GET | `/api/v1/progress/me` | Full progress summary |
 
-- **Honesty matters**: The one-entry-per-day rule and immutable history prevent self-deception
-- **Skills decay**: Regular practice is essential, and tracking decay helps maintain proficiency
-- **Distractions kill productivity**: Embedded learning environments keep you focused
-- **Streaks motivate**: Visual progress tracking encourages consistency
-- **Data-driven improvement**: Comprehensive history enables pattern recognition and optimization
-
-##  Getting Started
-
-### Prerequisites
-- Java 17 or higher
-- Maven 3.6+
-- [Your database]
-
-### Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/Consistify.git
-cd Consistify
-```
-
-2. Install dependencies:
-```bash
-./mvnw clean install
-```
-
-3. Configure your database in `application.properties`
-
-4. Run the application:
-```bash
-./mvnw spring-boot:run
-```
-
-5. Access the application at `http://localhost:8080/login.html`
-
-
-[README.md](README.md)
-![Dashboard](docs/images/Dashboard.png)
-
-![Practice Log](docs/images/Practicelog.png)
-
-![Progress](docs/images/Progress.png)
-
-![Skill Health](docs/images/Skill-health.png)
-
-![Skills](docs/images/Skills.png)
-
-##  Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 👥 Authors
-
-M.Mohan Murali
-
-##  Acknowledgments
-
-Built with the goal of helping developers and learners maintain consistent skill development and honest productivity tracking.
+### YouTube
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/youtube/video` | Save a YouTube URL |
+| GET | `/api/youtube/current` | Get most recent saved video |
+| POST | `/api/youtube/watch-time` | Save watch time `{ videoId, title, watchedSeconds }` |
+| GET | `/api/youtube/history` | Per-user watch history |
 
 ---
 
-**Consistify** - *Track honestly. Learn consistently. Grow continuously.*
+## Getting Started (Local)
 
+### Prerequisites
+- Java 21+
+- Maven 3.6+
+- PostgreSQL 14+ running locally
+- Google OAuth2 credentials (client ID + secret) from [Google Cloud Console](https://console.cloud.google.com)
+
+### Setup
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/Mohan171820/Consistify.git
+cd Consistify
+```
+
+2. **Create a local PostgreSQL database**
+```sql
+CREATE DATABASE consistify;
+```
+
+3. **Configure `application.properties`**
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/consistify
+spring.datasource.username=your_pg_user
+spring.datasource.password=your_pg_password
+spring.security.oauth2.client.registration.google.client-id=YOUR_GOOGLE_CLIENT_ID
+spring.security.oauth2.client.registration.google.client-secret=YOUR_GOOGLE_CLIENT_SECRET
+```
+
+4. **Build and run**
+```bash
+mvn clean install
+mvn spring-boot:run
+```
+
+5. **Open in browser**
+```
+http://localhost:8080/login.html
+```
+
+> ⚠️ After any entity or DTO change, always run `mvn clean install` to regenerate MapStruct mapper code.
+
+---
+
+## Deployment (Render)
+
+### Environment Variables
+Set these in Render → Web Service → Environment:
+
+| Key | Value |
+|-----|-------|
+| `SPRING_DATASOURCE_URL` | Internal DB URL from Render PostgreSQL |
+| `SPRING_DATASOURCE_USERNAME` | DB username |
+| `SPRING_DATASOURCE_PASSWORD` | DB password |
+| `GOOGLE_CLIENT_ID` | Google OAuth client ID |
+| `GOOGLE_CLIENT_PASSWORD` | Google OAuth client secret |
+| `APP_FRONTEND_URL` | `https://your-app.onrender.com` |
+| `PORT` | `10000` |
+
+### Google OAuth Redirect URIs
+In Google Cloud Console → Credentials → your OAuth client:
+- **Authorized origins:** `https://your-app.onrender.com`
+- **Authorized redirect URI:** `https://your-app.onrender.com/login/oauth2/code/google`
+
+### Deploy
+Push to GitHub — Render auto-deploys on every push to `master`.
+
+```bash
+git add .
+git commit -m "your changes"
+git push origin master
+```
+
+---
+
+## Philosophy
+
+Consistify is built on the belief that **honest self-tracking beats inflated metrics**.
+
+- **One log per day** — prevents retroactive gaming of your history
+- **Immutable records** — what you logged is what happened, no edits
+- **Skill decay** — regular practice is non-negotiable; the app reminds you
+- **Distraction-free learning** — embedded YouTube removes temptation
+- **Streaks that earn trust** — consecutive days of real practice, not shortcuts
+
+---
+
+## Roadmap
+
+- [ ] AI-powered skill recommendations (Spring AI)
+- [ ] Email notifications for decaying skills
+- [ ] Mobile-responsive layout
+- [ ] Export practice history as CSV
+- [ ] Social leaderboard / comparison mode
+- [ ] Dark / light theme toggle
+
+---
+
+## Author
+
+**M. Mohan Murali**
+
+---
+
+## Acknowledgments
+
+Built to solve a real problem — staying consistent and honest about learning progress. No fluff, no fake metrics, just honest tracking.
+
+---
+
+*Consistify — Track honestly. Learn consistently. Grow continuously.*
