@@ -2,7 +2,7 @@
 
 > **Track honestly. Learn consistently. Grow continuously.**
 
-Consistify is a full-stack productivity tracking platform built for developers and self-learners who want **verifiable, honest accountability** over their learning. It enforces one log per skill per day, tracks skill decay automatically, and provides a distraction-free YouTube learning environment — all in one place.
+Consistify is a  productivity tracking platform built for developers and self-learners who want **verifiable, honest accountability** over their learning. It enforces one log per skill per day, tracks skill decay automatically, and provides a distraction-free YouTube learning environment — all in one place.
 
 🔗 **Live Demo:** [https://consistify-p9jj.onrender.com](https://consistify-p9jj.onrender.com)
 
