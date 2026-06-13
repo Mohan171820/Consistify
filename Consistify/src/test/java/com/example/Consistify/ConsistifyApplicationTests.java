@@ -8,6 +8,7 @@ class ConsistifyApplicationTests {
 
 	@Test
 	void contextLoads() {
+		assert true;
 	}
 
 }
