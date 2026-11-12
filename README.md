@@ -9,13 +9,12 @@ Consistify is a  productivity tracking platform built for developers and self-le
 ---
 
 ## Screenshots
-
-<img width="1919" alt="Dashboard" src="https://github.com/user-attachments/assets/340c0d00-a55f-4671-8aaf-208fe894b61f" />
-<img width="1919" alt="Practice Log" src="https://github.com/user-attachments/assets/3469bf90-429c-4b1f-8f57-7e1af392c0dc" />
-<img width="1919" alt="Skill Health" src="https://github.com/user-attachments/assets/4529e067-ec89-4d60-a5a6-579a8c8b8ae3" />
-<img width="1919" alt="Progress" src="https://github.com/user-attachments/assets/9d8f41ab-f912-4f22-825d-03ab21f69c0b" />
-<img width="1919" alt="Skills" src="https://github.com/user-attachments/assets/a251644a-c95c-4dc0-abc1-02cee8ea78da" />
-
+[README.md](README.md)
+![Dashboard.png](docs/images/Dashboard.png)
+![Practicelog.png](docs/images/Practicelog.png)
+![Progress.png](docs/images/Progress.png)
+![Skill-health.png](docs/images/Skill-health.png)
+![Skills.png](docs/images/Skills.png)
 ---
 
 ## Features
